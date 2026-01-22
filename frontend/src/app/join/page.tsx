@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
@@ -19,6 +19,7 @@ export default function JoinPage() {
 
   const [step, setStep] = useState<Step>(1);
   const [regions, setRegions] = useState<Region[]>([]);
+  const [districts, setDistricts] = useState<Region[]>([]);
   const [committees, setCommittees] = useState<Committee[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +31,7 @@ export default function JoinPage() {
     password: '',
     passwordConfirm: '',
     regionId: '',
-    district: '',
+    districtId: '',
     committees: [] as string[],
     paymentType: 'monthly' as 'monthly' | 'yearly',
     agreeTerms: false,
@@ -51,13 +52,49 @@ export default function JoinPage() {
     fetchData();
   }, [supabase]);
 
+  // 시군구 데이터 가져오기
+  const fetchDistricts = useCallback(async (regionId: string) => {
+    if (!regionId) {
+      setDistricts([]);
+      return;
+    }
+
+    const { data } = await supabase
+      .from('regions')
+      .select('*')
+      .eq('parent_id', regionId)
+      .eq('level', 2)
+      .order('name');
+
+    if (data) setDistricts(data);
+  }, [supabase]);
+
+  // 지역 변경 시 시군구 데이터 로드
+  useEffect(() => {
+    if (formData.regionId) {
+      fetchDistricts(formData.regionId);
+    } else {
+      setDistricts([]);
+    }
+  }, [formData.regionId, fetchDistricts]);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value,
-    }));
+
+    // 시도가 변경되면 시군구 초기화
+    if (name === 'regionId') {
+      setFormData((prev) => ({
+        ...prev,
+        regionId: value,
+        districtId: '',
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value,
+      }));
+    }
     setError(null);
   };
 
@@ -129,11 +166,13 @@ export default function JoinPage() {
     setIsLoading(true);
     setError(null);
 
+    // districtId가 있으면 그것을 region으로, 없으면 regionId를 사용
+    const finalRegionId = formData.districtId || formData.regionId || undefined;
+
     const { error } = await signUp(formData.email, formData.password, {
       name: formData.name,
       phone: formData.phone,
-      regionId: formData.regionId || undefined,
-      district: formData.district,
+      regionId: finalRegionId,
       committees: formData.committees,
     });
 
@@ -258,28 +297,47 @@ export default function JoinPage() {
                 거주지 또는 활동 희망 지역을 선택해 주세요. 해당 지역 커뮤니티에 자동으로 가입됩니다.
               </p>
               <div className="space-y-4">
-                <label className="block text-sm font-medium text-[var(--gray-700)]">
-                  시/도 <span className="text-[var(--error)]">*</span>
-                </label>
-                <select
-                  name="regionId"
-                  value={formData.regionId}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-[var(--radius-md)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
-                >
-                  <option value="">시/도를 선택하세요</option>
-                  {regions.map((region) => (
-                    <option key={region.id} value={region.id}>{region.name}</option>
-                  ))}
-                </select>
+                <div>
+                  <label className="block text-sm font-medium text-[var(--gray-700)] mb-2">
+                    시/도 <span className="text-[var(--error)]">*</span>
+                  </label>
+                  <select
+                    name="regionId"
+                    value={formData.regionId}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-[var(--radius-md)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                  >
+                    <option value="">시/도를 선택하세요</option>
+                    {regions.map((region) => (
+                      <option key={region.id} value={region.id}>{region.name}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-[var(--gray-700)] mb-2">
+                    시/군/구
+                  </label>
+                  <select
+                    name="districtId"
+                    value={formData.districtId}
+                    onChange={handleInputChange}
+                    disabled={!formData.regionId || districts.length === 0}
+                    className="w-full px-4 py-2.5 border border-[var(--gray-300)] rounded-[var(--radius-md)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] disabled:bg-[var(--gray-100)] disabled:cursor-not-allowed"
+                  >
+                    <option value="">
+                      {!formData.regionId
+                        ? '먼저 시/도를 선택하세요'
+                        : districts.length === 0
+                          ? '시/군/구 정보가 없습니다'
+                          : '시/군/구를 선택하세요'
+                      }
+                    </option>
+                    {districts.map((district) => (
+                      <option key={district.id} value={district.id}>{district.name}</option>
+                    ))}
+                  </select>
+                </div>
               </div>
-              <Input
-                label="시/군/구"
-                name="district"
-                value={formData.district}
-                onChange={handleInputChange}
-                placeholder="예: 강남구"
-              />
             </div>
           )}
 
@@ -358,7 +416,7 @@ export default function JoinPage() {
                 <h3 className="font-medium text-[var(--gray-900)] mb-2">입당 신청 요약</h3>
                 <div className="text-sm text-[var(--gray-600)] space-y-1">
                   <p>이름: {formData.name || '-'}</p>
-                  <p>지역: {regions.find(r => r.id === formData.regionId)?.name || '-'} {formData.district}</p>
+                  <p>지역: {regions.find(r => r.id === formData.regionId)?.name || '-'} {districts.find(d => d.id === formData.districtId)?.name || ''}</p>
                   <p>상임위: {formData.committees.length}개 선택</p>
                   <p>당비: {formData.paymentType === 'monthly' ? '월 10,000원' : '연 100,000원'}</p>
                 </div>
