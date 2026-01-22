@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { User, CreditCard, Bell, Settings, MapPin, ClipboardList, FileText, MessageSquare, Heart } from 'lucide-react';
 
 // 더미 사용자 데이터
 const user = {
@@ -86,19 +87,27 @@ export default function PortalPage() {
               <CardContent>
                 <nav className="space-y-2">
                   <Link href="/portal/profile" className="flex items-center gap-3 p-3 rounded-[var(--radius-md)] hover:bg-[var(--gray-50)] transition-colors">
-                    <span className="text-xl">👤</span>
+                    <div className="w-8 h-8 bg-[var(--primary-light)] rounded-lg flex items-center justify-center">
+                      <User className="w-4 h-4 text-[var(--primary)]" />
+                    </div>
                     <span className="text-[var(--gray-700)]">내 프로필</span>
                   </Link>
                   <Link href="/portal/payments" className="flex items-center gap-3 p-3 rounded-[var(--radius-md)] hover:bg-[var(--gray-50)] transition-colors">
-                    <span className="text-xl">💳</span>
+                    <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                      <CreditCard className="w-4 h-4 text-green-600" />
+                    </div>
                     <span className="text-[var(--gray-700)]">당비 납부 현황</span>
                   </Link>
                   <Link href="/portal/notifications" className="flex items-center gap-3 p-3 rounded-[var(--radius-md)] hover:bg-[var(--gray-50)] transition-colors">
-                    <span className="text-xl">🔔</span>
+                    <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
+                      <Bell className="w-4 h-4 text-amber-600" />
+                    </div>
                     <span className="text-[var(--gray-700)]">알림</span>
                   </Link>
                   <Link href="/portal/settings" className="flex items-center gap-3 p-3 rounded-[var(--radius-md)] hover:bg-[var(--gray-50)] transition-colors">
-                    <span className="text-xl">⚙️</span>
+                    <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center">
+                      <Settings className="w-4 h-4 text-gray-600" />
+                    </div>
                     <span className="text-[var(--gray-700)]">설정</span>
                   </Link>
                 </nav>
@@ -121,7 +130,9 @@ export default function PortalPage() {
                   {/* Region Community */}
                   <Link href="/community/regions/seoul-gangnam" className="block p-4 border border-[var(--gray-200)] rounded-[var(--radius-md)] hover:border-[var(--primary)] transition-colors">
                     <div className="flex items-center gap-3 mb-2">
-                      <span className="text-2xl">📍</span>
+                      <div className="w-10 h-10 bg-[var(--primary-light)] rounded-lg flex items-center justify-center">
+                        <MapPin className="w-5 h-5 text-[var(--primary)]" />
+                      </div>
                       <div>
                         <div className="font-medium text-[var(--gray-900)]">{user.region}</div>
                         <div className="text-sm text-[var(--gray-500)]">지역 커뮤니티</div>
@@ -138,7 +149,9 @@ export default function PortalPage() {
                       className="block p-4 border border-[var(--gray-200)] rounded-[var(--radius-md)] hover:border-[var(--primary)] transition-colors"
                     >
                       <div className="flex items-center gap-3 mb-2">
-                        <span className="text-2xl">📋</span>
+                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <ClipboardList className="w-5 h-5 text-blue-600" />
+                        </div>
                         <div>
                           <div className="font-medium text-[var(--gray-900)]">{committee}</div>
                           <div className="text-sm text-[var(--gray-500)]">상임위원회</div>
@@ -190,10 +203,10 @@ export default function PortalPage() {
                 <div className="space-y-4">
                   {recentActivities.map((activity, index) => (
                     <div key={index} className="flex items-start gap-3">
-                      <div className="w-8 h-8 bg-[var(--gray-100)] rounded-full flex items-center justify-center text-sm">
-                        {activity.type === 'post' && '📝'}
-                        {activity.type === 'comment' && '💬'}
-                        {activity.type === 'like' && '❤️'}
+                      <div className="w-8 h-8 bg-[var(--gray-100)] rounded-full flex items-center justify-center">
+                        {activity.type === 'post' && <FileText className="w-4 h-4 text-[var(--gray-600)]" />}
+                        {activity.type === 'comment' && <MessageSquare className="w-4 h-4 text-[var(--gray-600)]" />}
+                        {activity.type === 'like' && <Heart className="w-4 h-4 text-red-500" />}
                       </div>
                       <div className="flex-1">
                         <p className="text-sm text-[var(--gray-700)]">{activity.content}</p>

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/Card';
+import { Home, Stethoscope, GraduationCap, Baby, Briefcase, Sprout, Vote, Bot } from 'lucide-react';
 
 const platformSections = [
   {
@@ -95,14 +96,14 @@ const platformSections = [
 ];
 
 const policyDirections = [
-  { icon: '🏠', title: '주거', description: '모든 사람이 안정된 집에서 살 권리' },
-  { icon: '🏥', title: '의료', description: '아플 때 돈 걱정 없이 치료받을 권리' },
-  { icon: '📚', title: '교육', description: '가정형편에 관계없이 배울 권리' },
-  { icon: '👶', title: '돌봄', description: '아이와 노인이 돌봄받을 권리' },
-  { icon: '💼', title: '노동', description: '일하는 사람이 존중받을 권리' },
-  { icon: '🌱', title: '환경', description: '깨끗한 환경에서 살 권리' },
-  { icon: '🗳️', title: '민주주의', description: '내 삶에 영향을 미치는 결정에 참여할 권리' },
-  { icon: '🤖', title: '기술', description: '기술 발전의 혜택을 누릴 권리' },
+  { icon: Home, title: '주거', description: '모든 사람이 안정된 집에서 살 권리', color: 'bg-orange-100 text-orange-600' },
+  { icon: Stethoscope, title: '의료', description: '아플 때 돈 걱정 없이 치료받을 권리', color: 'bg-red-100 text-red-600' },
+  { icon: GraduationCap, title: '교육', description: '가정형편에 관계없이 배울 권리', color: 'bg-blue-100 text-blue-600' },
+  { icon: Baby, title: '돌봄', description: '아이와 노인이 돌봄받을 권리', color: 'bg-pink-100 text-pink-600' },
+  { icon: Briefcase, title: '노동', description: '일하는 사람이 존중받을 권리', color: 'bg-amber-100 text-amber-600' },
+  { icon: Sprout, title: '환경', description: '깨끗한 환경에서 살 권리', color: 'bg-green-100 text-green-600' },
+  { icon: Vote, title: '민주주의', description: '내 삶에 영향을 미치는 결정에 참여할 권리', color: 'bg-purple-100 text-purple-600' },
+  { icon: Bot, title: '기술', description: '기술 발전의 혜택을 누릴 권리', color: 'bg-cyan-100 text-cyan-600' },
 ];
 
 export default function PlatformPage() {
@@ -128,16 +129,21 @@ export default function PlatformPage() {
           </p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {policyDirections.map((direction) => (
-            <div
-              key={direction.title}
-              className="bg-white rounded-[var(--radius-lg)] p-6 text-center shadow-sm hover:shadow-md transition-shadow"
-            >
-              <div className="text-4xl mb-3">{direction.icon}</div>
-              <h3 className="font-bold text-[var(--gray-900)] mb-2">{direction.title}</h3>
-              <p className="text-sm text-[var(--gray-600)]">{direction.description}</p>
-            </div>
-          ))}
+          {policyDirections.map((direction) => {
+            const Icon = direction.icon;
+            return (
+              <div
+                key={direction.title}
+                className="bg-white rounded-[var(--radius-lg)] p-6 text-center shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className={`w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-3 ${direction.color}`}>
+                  <Icon className="w-7 h-7" />
+                </div>
+                <h3 className="font-bold text-[var(--gray-900)] mb-2">{direction.title}</h3>
+                <p className="text-sm text-[var(--gray-600)]">{direction.description}</p>
+              </div>
+            );
+          })}
         </div>
       </section>
 

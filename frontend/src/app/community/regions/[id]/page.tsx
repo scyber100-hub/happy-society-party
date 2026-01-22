@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
+import { MapPin } from 'lucide-react';
 
 // 더미 게시글 데이터
 const posts = [
@@ -77,7 +78,9 @@ export default async function RegionCommunityPage({ params }: Props) {
             <span className="text-white">{regionName}</span>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-4xl">📍</span>
+            <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
+              <MapPin className="w-8 h-8 text-white" />
+            </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-bold">{regionName}</h1>
               <p className="text-white/80">지역 커뮤니티</p>

@@ -1,4 +1,5 @@
 import { Card, CardContent } from '@/components/ui/Card';
+import { User } from 'lucide-react';
 
 const leadership = [
   { position: '당대표', name: '김행복', description: '제2대 당대표 (2024~)' },
@@ -89,7 +90,7 @@ export default function OrganizationPage() {
             {leadership.map((leader) => (
               <Card key={leader.name} variant="default" className="bg-white text-center">
                 <div className="w-20 h-20 bg-[var(--gray-200)] rounded-full mx-auto mb-4 flex items-center justify-center">
-                  <span className="text-3xl text-[var(--gray-400)]">👤</span>
+                  <User className="w-10 h-10 text-[var(--gray-400)]" />
                 </div>
                 <div className="text-sm text-[var(--primary)] font-medium mb-1">{leader.position}</div>
                 <h3 className="text-xl font-bold text-[var(--gray-900)] mb-2">{leader.name}</h3>

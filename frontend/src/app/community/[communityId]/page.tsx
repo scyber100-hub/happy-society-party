@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { createClient } from '@/lib/supabase/server';
+import { MapPin, ClipboardList } from 'lucide-react';
 
 export const runtime = 'edge';
 export const revalidate = 30;
@@ -84,7 +85,13 @@ export default async function CommunityDetailPage({ params, searchParams }: Prop
             <span>{isRegion ? '지역' : '상임위원회'}</span>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-4xl">{isRegion ? '📍' : '📋'}</span>
+            <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
+              {isRegion ? (
+                <MapPin className="w-8 h-8 text-white" />
+              ) : (
+                <ClipboardList className="w-8 h-8 text-white" />
+              )}
+            </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-bold">{community.name}</h1>
               {community.description && (

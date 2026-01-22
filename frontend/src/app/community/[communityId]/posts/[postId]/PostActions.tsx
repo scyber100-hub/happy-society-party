@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { createClient } from '@/lib/supabase/client';
+import { Heart } from 'lucide-react';
 
 interface Props {
   postId: string;
@@ -139,8 +140,10 @@ export default function PostActions({ postId, communityId, authorId }: Props) {
             size="sm"
             onClick={handleLike}
             disabled={isLoading}
+            className="flex items-center gap-1.5"
           >
-            {isLiked ? '❤️' : '🤍'} 좋아요 {likeCount}
+            <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
+            좋아요 {likeCount}
           </Button>
           {!isAuthor && user && (
             <Button

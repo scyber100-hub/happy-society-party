@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
+import { LayoutDashboard, Users, FileText, AlertTriangle, Building2, Settings } from 'lucide-react';
 
 export const runtime = 'edge';
 
@@ -78,16 +79,16 @@ export default async function AdminLayout({
           <aside className="lg:w-64 flex-shrink-0">
             <nav className="bg-white rounded-[var(--radius-lg)] p-4 space-y-1">
               <Link href="/admin" className="flex items-center gap-3 px-4 py-3 rounded-[var(--radius-md)] hover:bg-[var(--primary-light)] text-[var(--gray-700)]">
-                <span>📊</span> 대시보드
+                <LayoutDashboard className="w-5 h-5" /> 대시보드
               </Link>
               <Link href="/admin/members" className="flex items-center gap-3 px-4 py-3 rounded-[var(--radius-md)] hover:bg-[var(--gray-50)] text-[var(--gray-700)]">
-                <span>👥</span> 회원 관리
+                <Users className="w-5 h-5" /> 회원 관리
               </Link>
               <Link href="/admin/posts" className="flex items-center gap-3 px-4 py-3 rounded-[var(--radius-md)] hover:bg-[var(--gray-50)] text-[var(--gray-700)]">
-                <span>📝</span> 게시글 관리
+                <FileText className="w-5 h-5" /> 게시글 관리
               </Link>
               <Link href="/admin/reports" className="flex items-center gap-3 px-4 py-3 rounded-[var(--radius-md)] hover:bg-[var(--gray-50)] text-[var(--gray-700)]">
-                <span>🚨</span> 신고 관리
+                <AlertTriangle className="w-5 h-5" /> 신고 관리
                 {pendingReports > 0 && (
                   <span className="ml-auto bg-[var(--error)] text-white text-xs px-2 py-0.5 rounded-full">
                     {pendingReports}
@@ -95,11 +96,11 @@ export default async function AdminLayout({
                 )}
               </Link>
               <Link href="/admin/communities" className="flex items-center gap-3 px-4 py-3 rounded-[var(--radius-md)] hover:bg-[var(--gray-50)] text-[var(--gray-700)]">
-                <span>🏘️</span> 커뮤니티 관리
+                <Building2 className="w-5 h-5" /> 커뮤니티 관리
               </Link>
               <hr className="my-2 border-[var(--gray-200)]" />
               <Link href="/admin/settings" className="flex items-center gap-3 px-4 py-3 rounded-[var(--radius-md)] hover:bg-[var(--gray-50)] text-[var(--gray-700)]">
-                <span>⚙️</span> 설정
+                <Settings className="w-5 h-5" /> 설정
               </Link>
             </nav>
           </aside>

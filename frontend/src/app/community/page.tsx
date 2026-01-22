@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/Card';
 import { createClient } from '@/lib/supabase/server';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, MapPin, ClipboardList } from 'lucide-react';
 
 export const runtime = 'edge';
 export const revalidate = 60; // 60초마다 재검증
@@ -111,7 +111,9 @@ export default async function CommunityPage() {
                   <Card variant="default" className="bg-white hover:shadow-[var(--shadow-md)] transition-shadow h-full">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
-                        <span className="text-2xl">📍</span>
+                        <div className="w-10 h-10 bg-[var(--primary-light)] rounded-lg flex items-center justify-center">
+                          <MapPin className="w-5 h-5 text-[var(--primary)]" />
+                        </div>
                         <h3 className="font-semibold text-[var(--gray-900)]">{community.name}</h3>
                       </div>
                       <ChevronRight className="w-5 h-5 text-[var(--gray-400)]" />
@@ -141,7 +143,9 @@ export default async function CommunityPage() {
               <Link key={community.id} href={`/community/${community.id}`}>
                 <Card variant="default" className="bg-white hover:shadow-[var(--shadow-md)] transition-shadow h-full">
                   <div className="flex items-center gap-3 mb-2">
-                    <span className="text-2xl">📋</span>
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <ClipboardList className="w-5 h-5 text-blue-600" />
+                    </div>
                     <h3 className="font-semibold text-[var(--gray-900)]">{community.name}</h3>
                   </div>
                   <p className="text-sm text-[var(--gray-500)] mb-3">{community.description}</p>

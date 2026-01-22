@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Card, CardContent } from '@/components/ui/Card';
 import { createClient } from '@/lib/supabase/server';
-import { ArrowLeft, Users, FileText } from 'lucide-react';
+import { ArrowLeft, Users, FileText, MapPin, Building2, MapPinned } from 'lucide-react';
 
 export const runtime = 'edge';
 export const revalidate = 60;
@@ -94,7 +94,9 @@ export default async function RegionDetailPage({ params }: Props) {
             전체 커뮤니티
           </Link>
           <div className="flex items-center gap-4">
-            <span className="text-4xl">📍</span>
+            <div className="w-14 h-14 bg-white/20 rounded-xl flex items-center justify-center">
+              <MapPin className="w-8 h-8 text-white" />
+            </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-bold">{region.name} 커뮤니티</h1>
               <p className="text-white/90 mt-1">
@@ -123,7 +125,9 @@ export default async function RegionDetailPage({ params }: Props) {
             <Link href={`/community/${parentCommunity.id}`}>
               <Card variant="default" className="bg-[var(--primary-light)] hover:shadow-[var(--shadow-md)] transition-shadow border-2 border-[var(--primary)]">
                 <div className="flex items-center gap-3 mb-2">
-                  <span className="text-2xl">🏛️</span>
+                  <div className="w-10 h-10 bg-[var(--primary)] rounded-lg flex items-center justify-center">
+                    <Building2 className="w-5 h-5 text-white" />
+                  </div>
                   <h3 className="font-semibold text-[var(--gray-900)]">{parentCommunity.name}</h3>
                 </div>
                 <p className="text-sm text-[var(--gray-600)] mb-3">
@@ -157,7 +161,9 @@ export default async function RegionDetailPage({ params }: Props) {
                   <Link key={district.id} href={`/community/${district.community.id}`}>
                     <Card variant="default" className="bg-white hover:shadow-[var(--shadow-md)] transition-shadow h-full">
                       <div className="flex items-center gap-3 mb-2">
-                        <span className="text-xl">📌</span>
+                        <div className="w-9 h-9 bg-[var(--primary-light)] rounded-lg flex items-center justify-center">
+                          <MapPinned className="w-4 h-4 text-[var(--primary)]" />
+                        </div>
                         <h3 className="font-semibold text-[var(--gray-900)]">{district.name}</h3>
                       </div>
                       <CardContent>
