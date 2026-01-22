@@ -103,48 +103,20 @@ export function useAuth() {
       committees?: string[];
     }
   ) => {
+    // 모든 사용자 데이터를 user_meta_data로 전달
+    // 데이터베이스 트리거가 자동으로 프로필과 위원회를 생성함
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
         data: {
           name: userData.name,
+          phone: userData.phone || null,
+          region_id: userData.regionId || null,
+          committees: userData.committees || [],
         },
       },
     });
-
-    if (error || !data.user) {
-      return { data, error };
-    }
-
-    // 프로필 생성
-    const { error: profileError } = await supabase.from('user_profiles').insert({
-      id: data.user.id,
-      name: userData.name,
-      phone: userData.phone,
-      region_id: userData.regionId,
-      district: userData.district,
-    });
-
-    if (profileError) {
-      console.error('프로필 생성 오류:', profileError);
-    }
-
-    // 상임위원회 연결
-    if (userData.committees && userData.committees.length > 0) {
-      const committeeInserts = userData.committees.map((committeeId) => ({
-        user_id: data.user!.id,
-        committee_id: committeeId,
-      }));
-
-      const { error: committeeError } = await supabase
-        .from('user_committees')
-        .insert(committeeInserts);
-
-      if (committeeError) {
-        console.error('상임위원회 연결 오류:', committeeError);
-      }
-    }
 
     return { data, error };
   };
