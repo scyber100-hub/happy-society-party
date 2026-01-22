@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { Card } from '@/components/ui/Card';
 import { createClient } from '@/lib/supabase/server';
@@ -96,9 +97,9 @@ export default async function PostDetailPage({ params }: Props) {
             <h1 className="text-2xl font-bold text-[var(--gray-900)]">{post.title}</h1>
             <div className="flex items-center justify-between mt-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-[var(--gray-200)] flex items-center justify-center overflow-hidden">
+                <div className="w-10 h-10 rounded-full bg-[var(--gray-200)] flex items-center justify-center overflow-hidden relative">
                   {post.author?.avatar_url ? (
-                    <img src={post.author.avatar_url} alt="" className="w-full h-full object-cover" />
+                    <Image src={post.author.avatar_url} alt="" fill className="object-cover" />
                   ) : (
                     <span className="text-[var(--gray-500)]">{post.author?.name?.[0] || '?'}</span>
                   )}

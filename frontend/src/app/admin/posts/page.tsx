@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
+import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { createClient } from '@/lib/supabase/client';
@@ -12,7 +12,6 @@ import {
   Trash2,
   Pin,
   PinOff,
-  MoreVertical,
   MessageSquare,
   Heart,
   ChevronLeft,
@@ -41,16 +40,11 @@ export default function AdminPostsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const [selectedPost, setSelectedPost] = useState<string | null>(null);
   const pageSize = 20;
 
   const supabase = createClient();
 
-  useEffect(() => {
-    fetchPosts();
-  }, [currentPage, searchQuery]);
-
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     setLoading(true);
     let query = supabase
       .from('posts')
@@ -73,7 +67,11 @@ export default function AdminPostsPage() {
       setTotalCount(count || 0);
     }
     setLoading(false);
-  };
+  }, [supabase, currentPage, pageSize, searchQuery]);
+
+  useEffect(() => {
+    fetchPosts();
+  }, [fetchPosts]);
 
   const handleTogglePin = async (postId: string, currentPinned: boolean | null) => {
     const newPinned = !(currentPinned ?? false);

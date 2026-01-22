@@ -5,12 +5,10 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import {
-  Settings,
   Globe,
   Bell,
   Shield,
   Database,
-  Mail,
   Save,
   RefreshCw,
   AlertTriangle,

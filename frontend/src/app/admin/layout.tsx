@@ -3,6 +3,8 @@ import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 
+export const runtime = 'edge';
+
 async function checkAdmin() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();

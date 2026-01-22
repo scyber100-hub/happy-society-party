@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
+import { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image';
+import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { createClient } from '@/lib/supabase/client';
@@ -36,7 +36,7 @@ export default function AdminMembersPage() {
   const [editingMember, setEditingMember] = useState<string | null>(null);
   const [newRole, setNewRole] = useState<UserRole | ''>('');
 
-  const fetchMembers = async () => {
+  const fetchMembers = useCallback(async () => {
     setIsLoading(true);
 
     let query = supabase
@@ -64,11 +64,11 @@ export default function AdminMembersPage() {
     }
 
     setIsLoading(false);
-  };
+  }, [supabase, searchQuery, roleFilter, currentPage]);
 
   useEffect(() => {
     fetchMembers();
-  }, [currentPage, roleFilter]);
+  }, [fetchMembers]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -156,9 +156,9 @@ export default function AdminMembersPage() {
                   <tr key={member.id} className="border-b border-[var(--gray-100)] hover:bg-[var(--gray-50)]">
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-[var(--primary-light)] rounded-full flex items-center justify-center overflow-hidden">
+                        <div className="w-10 h-10 bg-[var(--primary-light)] rounded-full flex items-center justify-center overflow-hidden relative">
                           {member.avatar_url ? (
-                            <img src={member.avatar_url} alt="" className="w-full h-full object-cover" />
+                            <Image src={member.avatar_url} alt="" fill className="object-cover" />
                           ) : (
                             <span className="text-[var(--primary)] font-medium">{member.name?.[0]}</span>
                           )}

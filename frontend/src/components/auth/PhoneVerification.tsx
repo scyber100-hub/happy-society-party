@@ -69,7 +69,7 @@ export function PhoneVerification({ phone, onVerified, onPhoneChange }: PhoneVer
 
       setStep('verify');
       setCountdown(300); // 5분 카운트다운
-    } catch (err) {
+    } catch {
       setError('인증 코드 발송에 실패했습니다. 잠시 후 다시 시도해주세요.');
     } finally {
       setIsLoading(false);
@@ -100,7 +100,7 @@ export function PhoneVerification({ phone, onVerified, onPhoneChange }: PhoneVer
       } else {
         setError('인증 코드가 올바르지 않거나 만료되었습니다.');
       }
-    } catch (err) {
+    } catch {
       setError('인증에 실패했습니다. 다시 시도해주세요.');
     } finally {
       setIsLoading(false);

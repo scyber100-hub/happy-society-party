@@ -49,7 +49,7 @@ function PaymentSuccessContent() {
           setStatus('error');
           setMessage(data.error || '결제 승인에 실패했습니다.');
         }
-      } catch (error) {
+      } catch {
         setStatus('error');
         setMessage('결제 처리 중 오류가 발생했습니다.');
       }

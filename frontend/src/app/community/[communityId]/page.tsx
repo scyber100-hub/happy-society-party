@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { Card, CardContent } from '@/components/ui/Card';
+import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { createClient } from '@/lib/supabase/server';
 
+export const runtime = 'edge';
 export const revalidate = 30;
 
 interface Props {
@@ -28,7 +29,7 @@ async function getPosts(communityId: string, page: number = 1, limit: number = 2
   const supabase = await createClient();
   const offset = (page - 1) * limit;
 
-  const { data, error, count } = await supabase
+  const { data, count } = await supabase
     .from('posts')
     .select('*, author:user_profiles(id, name, avatar_url)', { count: 'exact' })
     .eq('community_id', communityId)

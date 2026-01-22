@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/Card';
 
 const platformSections = [
@@ -187,18 +188,18 @@ export default function PlatformPage() {
             당원으로 참여하여 정책 논의에 직접 참여해 주세요.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
+            <Link
               href="/join"
               className="inline-block bg-[var(--primary)] text-white px-8 py-4 rounded-[var(--radius-md)] font-semibold hover:bg-[var(--primary-dark)] transition-colors"
             >
               입당 신청하기
-            </a>
-            <a
+            </Link>
+            <Link
               href="/policies"
               className="inline-block border-2 border-[var(--primary)] text-[var(--primary)] px-8 py-4 rounded-[var(--radius-md)] font-semibold hover:bg-[var(--primary-light)] transition-colors"
             >
               세부 정책 보기
-            </a>
+            </Link>
           </div>
         </div>
       </section>

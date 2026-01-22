@@ -1,6 +1,9 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { createClient } from '@/lib/supabase/server';
+
+export const runtime = 'edge';
 
 async function getStats() {
   const supabase = await createClient();
@@ -114,9 +117,9 @@ export default async function AdminDashboard() {
                 {recentMembers.map((member) => (
                   <div key={member.id} className="flex items-center justify-between py-2 border-b border-[var(--gray-100)] last:border-0">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-[var(--primary-light)] rounded-full flex items-center justify-center overflow-hidden">
+                      <div className="w-10 h-10 bg-[var(--primary-light)] rounded-full flex items-center justify-center overflow-hidden relative">
                         {member.avatar_url ? (
-                          <img src={member.avatar_url} alt="" className="w-full h-full object-cover" />
+                          <Image src={member.avatar_url} alt="" fill className="object-cover" />
                         ) : (
                           <span className="text-[var(--primary)] font-medium">{member.name[0]}</span>
                         )}

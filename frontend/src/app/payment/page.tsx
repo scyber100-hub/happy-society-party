@@ -6,9 +6,21 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { useAuthContext } from '@/contexts/AuthContext';
 
+interface TossPaymentsInstance {
+  requestPayment: (method: string, options: {
+    amount: number;
+    orderId: string;
+    orderName: string;
+    customerName: string;
+    customerEmail?: string;
+    successUrl: string;
+    failUrl: string;
+  }) => Promise<void>;
+}
+
 declare global {
   interface Window {
-    TossPayments: any;
+    TossPayments: (clientKey: string) => TossPaymentsInstance;
   }
 }
 
@@ -19,7 +31,7 @@ function PaymentContent() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const tossPaymentsRef = useRef<any>(null);
+  const tossPaymentsRef = useRef<TossPaymentsInstance | null>(null);
 
   const paymentType = (searchParams.get('type') as 'monthly' | 'yearly') || 'monthly';
   const amount = paymentType === 'monthly' ? 10000 : 100000;
@@ -84,11 +96,12 @@ function PaymentContent() {
         successUrl: `${window.location.origin}/payment/success`,
         failUrl: `${window.location.origin}/payment/fail`,
       });
-    } catch (err: any) {
-      if (err.code === 'USER_CANCEL') {
+    } catch (err: unknown) {
+      const error = err as { code?: string; message?: string };
+      if (error.code === 'USER_CANCEL') {
         setError('결제가 취소되었습니다.');
       } else {
-        setError(err.message || '결제 처리 중 오류가 발생했습니다.');
+        setError(error.message || '결제 처리 중 오류가 발생했습니다.');
       }
     } finally {
       setIsLoading(false);

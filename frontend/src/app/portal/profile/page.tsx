@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -11,7 +12,6 @@ import {
   Mail,
   Phone,
   MapPin,
-  Calendar,
   Camera,
   Save,
   Building2,
@@ -76,12 +76,13 @@ export default function ProfilePage() {
           <Card variant="default" className="bg-white md:col-span-1">
             <CardContent className="text-center py-8">
               <div className="relative inline-block">
-                <div className="w-32 h-32 bg-[var(--primary-light)] rounded-full flex items-center justify-center mx-auto">
+                <div className="w-32 h-32 bg-[var(--primary-light)] rounded-full flex items-center justify-center mx-auto relative overflow-hidden">
                   {userData.avatar ? (
-                    <img
+                    <Image
                       src={userData.avatar}
                       alt={userData.name}
-                      className="w-full h-full rounded-full object-cover"
+                      fill
+                      className="object-cover"
                     />
                   ) : (
                     <span className="text-5xl text-[var(--primary)] font-bold">

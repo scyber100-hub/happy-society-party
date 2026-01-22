@@ -3,7 +3,6 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import {
   Newspaper,
@@ -23,7 +22,7 @@ const categories: { id: string; name: string; icon: LucideIcon; href: string }[]
 ];
 
 // 뉴스 데이터 (향후 DB에서 가져올 예정)
-export const newsData = [
+const newsData = [
   {
     id: 'news-001',
     category: 'press',

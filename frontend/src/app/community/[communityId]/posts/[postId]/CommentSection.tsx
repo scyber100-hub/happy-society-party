@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -34,7 +35,7 @@ function formatDate(dateString: string) {
 
 export default function CommentSection({ postId, initialComments }: Props) {
   const router = useRouter();
-  const { user, profile } = useAuthContext();
+  const { user } = useAuthContext();
   const supabase = createClient();
 
   const [comments, setComments] = useState<CommentWithAuthor[]>(initialComments);
@@ -169,9 +170,9 @@ export default function CommentSection({ postId, initialComments }: Props) {
       className={`${isReply ? 'ml-8 border-l-2 border-[var(--gray-200)] pl-4' : ''}`}
     >
       <div className="flex items-start gap-3 py-4">
-        <div className="w-8 h-8 rounded-full bg-[var(--gray-200)] flex items-center justify-center overflow-hidden flex-shrink-0">
+        <div className="w-8 h-8 rounded-full bg-[var(--gray-200)] flex items-center justify-center overflow-hidden flex-shrink-0 relative">
           {comment.author?.avatar_url ? (
-            <img src={comment.author.avatar_url} alt="" className="w-full h-full object-cover" />
+            <Image src={comment.author.avatar_url} alt="" fill className="object-cover" />
           ) : (
             <span className="text-sm text-[var(--gray-500)]">
               {comment.author?.name?.[0] || '?'}

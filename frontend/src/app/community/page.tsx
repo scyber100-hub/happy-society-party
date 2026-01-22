@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/Card';
 import { createClient } from '@/lib/supabase/server';
 
+export const runtime = 'edge';
 export const revalidate = 60; // 60초마다 재검증
 
 async function getCommunities() {

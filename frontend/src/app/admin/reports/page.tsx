@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
+import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { createClient } from '@/lib/supabase/client';
 import type { Report, UserProfile, Post, Comment, ReportStatus } from '@/types/database';
@@ -54,7 +54,7 @@ export default function AdminReportsPage() {
   const [adminNote, setAdminNote] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
 
-  const fetchReports = async () => {
+  const fetchReports = useCallback(async () => {
     setIsLoading(true);
 
     let query = supabase
@@ -84,11 +84,11 @@ export default function AdminReportsPage() {
     }
 
     setIsLoading(false);
-  };
+  }, [supabase, statusFilter, currentPage]);
 
   useEffect(() => {
     fetchReports();
-  }, [currentPage, statusFilter]);
+  }, [fetchReports]);
 
   const handleStatusChange = async (reportId: string, newStatus: ReportStatus) => {
     setIsUpdating(true);

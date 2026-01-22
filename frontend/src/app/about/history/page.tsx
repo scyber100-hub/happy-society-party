@@ -72,9 +72,9 @@ export default function HistoryPage() {
           </div>
           <div className="bg-white rounded-[var(--radius-xl)] p-8 md:p-12">
             <blockquote className="text-xl md:text-2xl text-[var(--gray-700)] italic text-center leading-relaxed">
-              "우리는 모든 국민이 행복할 권리가 있다고 믿습니다.<br />
+              &ldquo;우리는 모든 국민이 행복할 권리가 있다고 믿습니다.<br />
               정치는 소수가 아닌 모두를 위한 것이어야 합니다.<br />
-              행복사회당은 이 믿음을 실현하기 위해 창당되었습니다."
+              행복사회당은 이 믿음을 실현하기 위해 창당되었습니다.&rdquo;
             </blockquote>
             <p className="text-center text-[var(--gray-500)] mt-6">- 창당 선언문 중에서</p>
           </div>

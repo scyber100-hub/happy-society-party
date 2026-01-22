@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
+import { useState, useEffect, useCallback } from 'react';
+import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { createClient } from '@/lib/supabase/client';
@@ -9,7 +9,6 @@ import {
   Search,
   Users,
   FileText,
-  Settings,
   Plus,
   Edit2,
   Trash2,
@@ -38,14 +37,12 @@ export default function AdminCommunitiesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'region' | 'committee'>('all');
   const [showCreateModal, setShowCreateModal] = useState(false);
+  // Suppress unused warning - will be used when modal is implemented
+  void showCreateModal;
 
   const supabase = createClient();
 
-  useEffect(() => {
-    fetchCommunities();
-  }, [searchQuery, filterType]);
-
-  const fetchCommunities = async () => {
+  const fetchCommunities = useCallback(async () => {
     setLoading(true);
     let query = supabase
       .from('communities')
@@ -71,7 +68,11 @@ export default function AdminCommunitiesPage() {
       setCommunities(data);
     }
     setLoading(false);
-  };
+  }, [supabase, filterType, searchQuery]);
+
+  useEffect(() => {
+    fetchCommunities();
+  }, [fetchCommunities]);
 
   const handleToggleActive = async (communityId: string, currentActive: boolean | null) => {
     const newActive = !(currentActive ?? false);

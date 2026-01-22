@@ -26,7 +26,7 @@ function ResetPasswordForm() {
     // Supabase handles the token verification automatically
     // when the page is loaded with the correct hash parameters
     const checkSession = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
+      await supabase.auth.getSession();
 
       // If there's an error in the URL (e.g., expired link)
       const errorDescription = searchParams.get('error_description');
@@ -37,7 +37,7 @@ function ResetPasswordForm() {
     };
 
     checkSession();
-  }, [searchParams]);
+  }, [searchParams, supabase.auth]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
