@@ -1,11 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
+import { useAuthContext } from '@/contexts/AuthContext';
+import { createClient } from '@/lib/supabase/client';
 import {
   ArrowLeft,
   User,
@@ -15,43 +17,186 @@ import {
   Camera,
   Save,
   Building2,
+  Loader2,
+  Check,
+  X,
 } from 'lucide-react';
 
-// 더미 사용자 데이터
-const initialUserData = {
-  name: '홍길동',
-  email: 'hong@example.com',
-  phone: '010-1234-5678',
-  avatar: null,
-  bio: '행복한 사회를 만들기 위해 함께 노력하는 당원입니다.',
-  region: '서울특별시',
-  district: '강남구',
-  memberSince: '2025-06-15',
-  committees: ['정책위원회', '환경위원회'],
-};
+interface Region {
+  id: string;
+  name: string;
+  level: number;
+  parent_id: string | null;
+}
 
-const regions = [
-  '서울특별시', '부산광역시', '대구광역시', '인천광역시', '광주광역시',
-  '대전광역시', '울산광역시', '세종특별자치시', '경기도', '강원도',
-  '충청북도', '충청남도', '전라북도', '전라남도', '경상북도', '경상남도', '제주특별자치도',
-];
+interface Committee {
+  id: string;
+  name: string;
+}
 
 export default function ProfilePage() {
-  const [userData, setUserData] = useState(initialUserData);
+  const router = useRouter();
+  const { user, profile, loading: authLoading, isAuthenticated, updateProfile } = useAuthContext();
+
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    bio: '',
+    district: '',
+    region_id: '',
+  });
+  const [regions, setRegions] = useState<Region[]>([]);
+  const [userCommittees, setUserCommittees] = useState<Committee[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const supabase = createClient();
+
+  const fetchData = useCallback(async () => {
+    if (!user || !profile) return;
+
+    setLoading(true);
+
+    // 지역 목록 가져오기 (시/도 레벨)
+    const { data: regionsData } = await supabase
+      .from('regions')
+      .select('*')
+      .eq('level', 1)
+      .order('name');
+
+    if (regionsData) {
+      setRegions(regionsData);
+    }
+
+    // 사용자의 위원회 가져오기
+    const { data: committeesData } = await supabase
+      .from('user_committees')
+      .select('committee_id, committees(id, name)')
+      .eq('user_id', user.id);
+
+    if (committeesData) {
+      const committees = committeesData
+        .map(uc => uc.committees as Committee | null)
+        .filter((c): c is Committee => c !== null);
+      setUserCommittees(committees);
+    }
+
+    // 폼 데이터 초기화
+    setFormData({
+      name: profile.name || '',
+      phone: profile.phone || '',
+      bio: profile.bio || '',
+      district: profile.district || '',
+      region_id: profile.region_id || '',
+    });
+
+    setLoading(false);
+  }, [user, profile, supabase]);
+
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      router.push('/auth/login?redirect=/portal/profile');
+      return;
+    }
+
+    if (user && profile) {
+      fetchData();
+    }
+  }, [authLoading, isAuthenticated, user, profile, router, fetchData]);
 
   const handleInputChange = (field: string, value: string) => {
-    setUserData((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setMessage(null);
   };
 
   const handleSave = async () => {
     setIsSaving(true);
-    // 실제로는 API 호출
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setMessage(null);
+
+    const { error } = await updateProfile({
+      name: formData.name,
+      phone: formData.phone || null,
+      bio: formData.bio || null,
+      district: formData.district || null,
+      region_id: formData.region_id || null,
+    });
+
+    if (error) {
+      setMessage({ type: 'error', text: '프로필 저장에 실패했습니다.' });
+    } else {
+      setMessage({ type: 'success', text: '프로필이 저장되었습니다.' });
+      setIsEditing(false);
+    }
+
     setIsSaving(false);
-    setIsEditing(false);
   };
+
+  const handleCancel = () => {
+    // 원래 값으로 복원
+    if (profile) {
+      setFormData({
+        name: profile.name || '',
+        phone: profile.phone || '',
+        bio: profile.bio || '',
+        district: profile.district || '',
+        region_id: profile.region_id || '',
+      });
+    }
+    setIsEditing(false);
+    setMessage(null);
+  };
+
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return '-';
+    return new Date(dateString).toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+  };
+
+  const getRoleName = (role: string | null) => {
+    switch (role) {
+      case 'admin': return '관리자';
+      case 'moderator': return '운영자';
+      case 'member': return '당원';
+      case 'user': return '회원';
+      default: return '게스트';
+    }
+  };
+
+  const getRegionName = (regionId: string | null) => {
+    if (!regionId) return '-';
+    const region = regions.find(r => r.id === regionId);
+    return region?.name || '-';
+  };
+
+  // 로딩 상태
+  if (authLoading || loading) {
+    return (
+      <div className="min-h-screen bg-[var(--gray-50)] flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin text-[var(--primary)] mx-auto mb-4" />
+          <p className="text-[var(--gray-500)]">로딩 중...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="min-h-screen bg-[var(--gray-50)] flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-[var(--gray-500)]">프로필 정보를 불러올 수 없습니다.</p>
+          <Link href="/auth/login">
+            <Button variant="primary" className="mt-4">로그인하기</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[var(--gray-50)]">
@@ -71,22 +216,37 @@ export default function ProfilePage() {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* 메시지 표시 */}
+        {message && (
+          <div className={`mb-6 p-4 rounded-[var(--radius-md)] flex items-center gap-2 ${
+            message.type === 'success'
+              ? 'bg-green-50 text-green-700 border border-green-200'
+              : 'bg-red-50 text-red-700 border border-red-200'
+          }`}>
+            {message.type === 'success' ? (
+              <Check className="w-5 h-5" />
+            ) : (
+              <X className="w-5 h-5" />
+            )}
+            {message.text}
+          </div>
+        )}
+
         <div className="grid md:grid-cols-3 gap-6">
           {/* Profile Photo Section */}
           <Card variant="default" className="bg-white md:col-span-1">
             <CardContent className="text-center py-8">
               <div className="relative inline-block">
                 <div className="w-32 h-32 bg-[var(--primary-light)] rounded-full flex items-center justify-center mx-auto relative overflow-hidden">
-                  {userData.avatar ? (
-                    <Image
-                      src={userData.avatar}
-                      alt={userData.name}
-                      fill
-                      className="object-cover"
+                  {profile.avatar_url ? (
+                    <img
+                      src={profile.avatar_url}
+                      alt={profile.name}
+                      className="w-full h-full object-cover"
                     />
                   ) : (
                     <span className="text-5xl text-[var(--primary)] font-bold">
-                      {userData.name[0]}
+                      {profile.name[0]}
                     </span>
                   )}
                 </div>
@@ -96,11 +256,16 @@ export default function ProfilePage() {
                   </button>
                 )}
               </div>
-              <h2 className="text-xl font-bold text-[var(--gray-900)] mt-4">{userData.name}</h2>
-              <p className="text-[var(--primary)]">당원</p>
+              <h2 className="text-xl font-bold text-[var(--gray-900)] mt-4">{profile.name}</h2>
+              <p className="text-[var(--primary)]">{getRoleName(profile.role)}</p>
               <div className="text-sm text-[var(--gray-500)] mt-2">
-                가입일: {userData.memberSince}
+                가입일: {formatDate(profile.created_at)}
               </div>
+              {profile.is_party_member && profile.party_member_since && (
+                <div className="text-sm text-[var(--gray-500)]">
+                  입당일: {formatDate(profile.party_member_since)}
+                </div>
+              )}
             </CardContent>
           </Card>
 
@@ -115,7 +280,7 @@ export default function ProfilePage() {
                   </Button>
                 ) : (
                   <div className="flex gap-2">
-                    <Button variant="ghost" size="sm" onClick={() => setIsEditing(false)}>
+                    <Button variant="ghost" size="sm" onClick={handleCancel}>
                       취소
                     </Button>
                     <Button
@@ -141,29 +306,22 @@ export default function ProfilePage() {
                   </label>
                   {isEditing ? (
                     <Input
-                      value={userData.name}
+                      value={formData.name}
                       onChange={(e) => handleInputChange('name', e.target.value)}
                     />
                   ) : (
-                    <p className="text-[var(--gray-900)] py-2">{userData.name}</p>
+                    <p className="text-[var(--gray-900)] py-2">{profile.name}</p>
                   )}
                 </div>
 
-                {/* Email */}
+                {/* Email (읽기 전용) */}
                 <div>
                   <label className="flex items-center gap-2 text-sm font-medium text-[var(--gray-700)] mb-2">
                     <Mail className="w-4 h-4" />
                     이메일
+                    <span className="text-xs text-[var(--gray-400)]">(변경 불가)</span>
                   </label>
-                  {isEditing ? (
-                    <Input
-                      type="email"
-                      value={userData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
-                    />
-                  ) : (
-                    <p className="text-[var(--gray-900)] py-2">{userData.email}</p>
-                  )}
+                  <p className="text-[var(--gray-900)] py-2">{user?.email || '-'}</p>
                 </div>
 
                 {/* Phone */}
@@ -175,11 +333,12 @@ export default function ProfilePage() {
                   {isEditing ? (
                     <Input
                       type="tel"
-                      value={userData.phone}
+                      value={formData.phone}
                       onChange={(e) => handleInputChange('phone', e.target.value)}
+                      placeholder="010-0000-0000"
                     />
                   ) : (
-                    <p className="text-[var(--gray-900)] py-2">{userData.phone}</p>
+                    <p className="text-[var(--gray-900)] py-2">{profile.phone || '-'}</p>
                   )}
                 </div>
 
@@ -192,18 +351,19 @@ export default function ProfilePage() {
                     </label>
                     {isEditing ? (
                       <select
-                        value={userData.region}
-                        onChange={(e) => handleInputChange('region', e.target.value)}
+                        value={formData.region_id}
+                        onChange={(e) => handleInputChange('region_id', e.target.value)}
                         className="w-full px-4 py-2 border border-[var(--gray-300)] rounded-[var(--radius-md)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent"
                       >
+                        <option value="">선택하세요</option>
                         {regions.map((region) => (
-                          <option key={region} value={region}>
-                            {region}
+                          <option key={region.id} value={region.id}>
+                            {region.name}
                           </option>
                         ))}
                       </select>
                     ) : (
-                      <p className="text-[var(--gray-900)] py-2">{userData.region}</p>
+                      <p className="text-[var(--gray-900)] py-2">{getRegionName(profile.region_id)}</p>
                     )}
                   </div>
                   <div>
@@ -213,11 +373,12 @@ export default function ProfilePage() {
                     </label>
                     {isEditing ? (
                       <Input
-                        value={userData.district}
+                        value={formData.district}
                         onChange={(e) => handleInputChange('district', e.target.value)}
+                        placeholder="예: 강남구"
                       />
                     ) : (
-                      <p className="text-[var(--gray-900)] py-2">{userData.district}</p>
+                      <p className="text-[var(--gray-900)] py-2">{profile.district || '-'}</p>
                     )}
                   </div>
                 </div>
@@ -229,13 +390,14 @@ export default function ProfilePage() {
                   </label>
                   {isEditing ? (
                     <textarea
-                      value={userData.bio}
+                      value={formData.bio}
                       onChange={(e) => handleInputChange('bio', e.target.value)}
                       rows={3}
+                      placeholder="간단한 자기소개를 작성해 주세요."
                       className="w-full px-4 py-2 border border-[var(--gray-300)] rounded-[var(--radius-md)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent resize-none"
                     />
                   ) : (
-                    <p className="text-[var(--gray-900)] py-2">{userData.bio || '-'}</p>
+                    <p className="text-[var(--gray-900)] py-2">{profile.bio || '-'}</p>
                   )}
                 </div>
               </div>
@@ -251,14 +413,14 @@ export default function ProfilePage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {userData.committees.length > 0 ? (
+              {userCommittees.length > 0 ? (
                 <div className="flex flex-wrap gap-3">
-                  {userData.committees.map((committee) => (
+                  {userCommittees.map((committee) => (
                     <span
-                      key={committee}
+                      key={committee.id}
                       className="px-4 py-2 bg-[var(--primary-light)] text-[var(--primary)] rounded-full font-medium"
                     >
-                      {committee}
+                      {committee.name}
                     </span>
                   ))}
                 </div>
@@ -285,9 +447,11 @@ export default function ProfilePage() {
                       계정 보안을 위해 정기적으로 비밀번호를 변경해 주세요.
                     </p>
                   </div>
-                  <Button variant="outline" size="sm">
-                    변경하기
-                  </Button>
+                  <Link href="/auth/reset-password">
+                    <Button variant="outline" size="sm">
+                      변경하기
+                    </Button>
+                  </Link>
                 </div>
                 <div className="flex items-center justify-between p-4 border border-[var(--gray-200)] rounded-[var(--radius-md)]">
                   <div>
@@ -296,23 +460,25 @@ export default function ProfilePage() {
                       이메일 및 푸시 알림 설정을 관리합니다.
                     </p>
                   </div>
-                  <Link href="/portal/notifications/settings">
+                  <Link href="/portal/notifications">
                     <Button variant="outline" size="sm">
                       설정하기
                     </Button>
                   </Link>
                 </div>
-                <div className="flex items-center justify-between p-4 border border-[var(--error)]/20 rounded-[var(--radius-md)] bg-[var(--error)]/5">
-                  <div>
-                    <h4 className="font-medium text-[var(--error)]">탈당 신청</h4>
-                    <p className="text-sm text-[var(--gray-500)]">
-                      탈당을 원하시면 신청해 주세요.
-                    </p>
+                {profile.is_party_member && (
+                  <div className="flex items-center justify-between p-4 border border-[var(--error)]/20 rounded-[var(--radius-md)] bg-[var(--error)]/5">
+                    <div>
+                      <h4 className="font-medium text-[var(--error)]">탈당 신청</h4>
+                      <p className="text-sm text-[var(--gray-500)]">
+                        탈당을 원하시면 신청해 주세요.
+                      </p>
+                    </div>
+                    <Button variant="danger" size="sm">
+                      탈당 신청
+                    </Button>
                   </div>
-                  <Button variant="danger" size="sm">
-                    탈당 신청
-                  </Button>
-                </div>
+                )}
               </div>
             </CardContent>
           </Card>

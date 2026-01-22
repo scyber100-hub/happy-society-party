@@ -1,9 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { useAuthContext } from '@/contexts/AuthContext';
+import { createClient } from '@/lib/supabase/client';
+import type { PaymentStatus } from '@/types/database';
 import {
   ArrowLeft,
   CreditCard,
@@ -14,105 +18,198 @@ import {
   Download,
   ChevronRight,
   AlertCircle,
+  Loader2,
 } from 'lucide-react';
 
-// 더미 결제 데이터
-const paymentSummary = {
-  currentStatus: 'paid', // paid, pending, overdue
-  nextPaymentDate: '2026-02-01',
-  monthlyAmount: 10000,
-  paidMonths: 7,
-  totalPaid: 70000,
-};
-
-const paymentHistory = [
-  {
-    id: 'pay-001',
-    date: '2026-01-01',
-    amount: 10000,
-    status: 'completed',
-    method: '신용카드',
-    receiptUrl: '#',
-  },
-  {
-    id: 'pay-002',
-    date: '2025-12-01',
-    amount: 10000,
-    status: 'completed',
-    method: '신용카드',
-    receiptUrl: '#',
-  },
-  {
-    id: 'pay-003',
-    date: '2025-11-01',
-    amount: 10000,
-    status: 'completed',
-    method: '계좌이체',
-    receiptUrl: '#',
-  },
-  {
-    id: 'pay-004',
-    date: '2025-10-01',
-    amount: 10000,
-    status: 'completed',
-    method: '신용카드',
-    receiptUrl: '#',
-  },
-  {
-    id: 'pay-005',
-    date: '2025-09-01',
-    amount: 10000,
-    status: 'completed',
-    method: '신용카드',
-    receiptUrl: '#',
-  },
-  {
-    id: 'pay-006',
-    date: '2025-08-01',
-    amount: 10000,
-    status: 'completed',
-    method: '카카오페이',
-    receiptUrl: '#',
-  },
-  {
-    id: 'pay-007',
-    date: '2025-07-01',
-    amount: 10000,
-    status: 'completed',
-    method: '신용카드',
-    receiptUrl: '#',
-  },
-];
+interface Payment {
+  id: string;
+  amount: number;
+  payment_type: 'monthly' | 'yearly';
+  status: PaymentStatus | null;
+  paid_at: string | null;
+  period_start: string | null;
+  period_end: string | null;
+  pg_provider: string | null;
+  receipt_url: string | null;
+  created_at: string | null;
+}
 
 const statusConfig = {
-  paid: {
+  completed: {
     label: '납부완료',
     icon: CheckCircle,
     color: 'text-[var(--success)]',
     bgColor: 'bg-[var(--success)]/10',
   },
   pending: {
-    label: '납부예정',
+    label: '처리중',
     icon: Clock,
     color: 'text-[var(--secondary)]',
     bgColor: 'bg-[var(--secondary)]/10',
   },
-  overdue: {
-    label: '미납',
+  failed: {
+    label: '실패',
     icon: XCircle,
     color: 'text-[var(--error)]',
     bgColor: 'bg-[var(--error)]/10',
   },
+  cancelled: {
+    label: '취소됨',
+    icon: XCircle,
+    color: 'text-[var(--gray-500)]',
+    bgColor: 'bg-[var(--gray-100)]',
+  },
+  refunded: {
+    label: '환불됨',
+    icon: XCircle,
+    color: 'text-[var(--gray-500)]',
+    bgColor: 'bg-[var(--gray-100)]',
+  },
 };
 
 export default function PaymentsPage() {
-  const [selectedYear, setSelectedYear] = useState('2026');
-  const currentStatusConfig = statusConfig[paymentSummary.currentStatus as keyof typeof statusConfig];
+  const router = useRouter();
+  const { user, profile, loading: authLoading, isAuthenticated } = useAuthContext();
+
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString());
+  const [availableYears, setAvailableYears] = useState<string[]>([]);
+
+  const supabase = createClient();
+
+  const fetchPayments = useCallback(async () => {
+    if (!user) return;
+
+    setLoading(true);
+
+    const { data, error } = await supabase
+      .from('payments')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('paid_at', { ascending: false });
+
+    if (!error && data) {
+      setPayments(data);
+
+      // 가용 연도 추출
+      const years = new Set<string>();
+      years.add(new Date().getFullYear().toString());
+      data.forEach(p => {
+        if (p.paid_at) {
+          years.add(new Date(p.paid_at).getFullYear().toString());
+        }
+      });
+      setAvailableYears(Array.from(years).sort((a, b) => parseInt(b) - parseInt(a)));
+    }
+
+    setLoading(false);
+  }, [user, supabase]);
+
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      router.push('/auth/login?redirect=/portal/payments');
+      return;
+    }
+
+    if (user) {
+      fetchPayments();
+    }
+  }, [authLoading, isAuthenticated, user, router, fetchPayments]);
+
+  // 이번 달 납부 상태 확인
+  const getCurrentMonthStatus = (): 'completed' | 'pending' | 'unpaid' => {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth() + 1;
+
+    const thisMonthPayment = payments.find(p => {
+      if (!p.period_start) return false;
+      const start = new Date(p.period_start);
+      return start.getFullYear() === currentYear && start.getMonth() + 1 === currentMonth;
+    });
+
+    if (thisMonthPayment) {
+      if (thisMonthPayment.status === 'completed') return 'completed';
+      if (thisMonthPayment.status === 'pending') return 'pending';
+    }
+    return 'unpaid';
+  };
+
+  // 총 납부 금액 계산
+  const getTotalPaid = () => {
+    return payments
+      .filter(p => p.status === 'completed')
+      .reduce((sum, p) => sum + p.amount, 0);
+  };
+
+  // 다음 결제일 계산
+  const getNextPaymentDate = () => {
+    const now = new Date();
+    const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    return nextMonth.toISOString().split('T')[0];
+  };
+
+  // 연도별 필터링
+  const filteredPayments = payments.filter((payment) => {
+    if (!payment.paid_at) return false;
+    return payment.paid_at.startsWith(selectedYear);
+  });
+
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return '-';
+    return new Date(dateString).toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    });
+  };
+
+  const getPaymentMethodLabel = (provider: string | null) => {
+    if (!provider) return '-';
+    switch (provider.toLowerCase()) {
+      case 'kakaopay': return '카카오페이';
+      case 'naverpay': return '네이버페이';
+      case 'card': return '신용카드';
+      case 'bank': return '계좌이체';
+      default: return provider;
+    }
+  };
+
+  const currentStatus = getCurrentMonthStatus();
+
+  const currentStatusConfig = currentStatus === 'unpaid'
+    ? { label: '미납', icon: XCircle, color: 'text-[var(--error)]', bgColor: 'bg-[var(--error)]/10' }
+    : currentStatus === 'pending'
+    ? statusConfig.pending
+    : statusConfig.completed;
+
   const StatusIcon = currentStatusConfig.icon;
 
-  const filteredHistory = paymentHistory.filter((payment) =>
-    payment.date.startsWith(selectedYear)
-  );
+  // 로딩 상태
+  if (authLoading || loading) {
+    return (
+      <div className="min-h-screen bg-[var(--gray-50)] flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin text-[var(--primary)] mx-auto mb-4" />
+          <p className="text-[var(--gray-500)]">로딩 중...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="min-h-screen bg-[var(--gray-50)] flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-[var(--gray-500)]">프로필 정보를 불러올 수 없습니다.</p>
+          <Link href="/auth/login">
+            <Button variant="primary" className="mt-4">로그인하기</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[var(--gray-50)]">
@@ -153,7 +250,7 @@ export default function PaymentsPage() {
               </div>
               <div className="text-sm text-[var(--gray-500)] mb-1">다음 결제일</div>
               <div className="text-xl font-bold text-[var(--gray-900)]">
-                {paymentSummary.nextPaymentDate}
+                {getNextPaymentDate()}
               </div>
             </CardContent>
           </Card>
@@ -165,7 +262,7 @@ export default function PaymentsPage() {
               </div>
               <div className="text-sm text-[var(--gray-500)] mb-1">총 납부 금액</div>
               <div className="text-xl font-bold text-[var(--gray-900)]">
-                {paymentSummary.totalPaid.toLocaleString()}원
+                {getTotalPaid().toLocaleString()}원
               </div>
             </CardContent>
           </Card>
@@ -182,12 +279,14 @@ export default function PaymentsPage() {
                 <div className="flex justify-between py-2 border-b border-[var(--gray-100)]">
                   <span className="text-[var(--gray-500)]">월 당비</span>
                   <span className="font-medium text-[var(--gray-900)]">
-                    {paymentSummary.monthlyAmount.toLocaleString()}원
+                    10,000원
                   </span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-[var(--gray-100)]">
-                  <span className="text-[var(--gray-500)]">결제 방법</span>
-                  <span className="font-medium text-[var(--gray-900)]">신용카드 (자동)</span>
+                  <span className="text-[var(--gray-500)]">납부 횟수</span>
+                  <span className="font-medium text-[var(--gray-900)]">
+                    {payments.filter(p => p.status === 'completed').length}회
+                  </span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-[var(--gray-100)]">
                   <span className="text-[var(--gray-500)]">정기 결제일</span>
@@ -234,8 +333,9 @@ export default function PaymentsPage() {
                   onChange={(e) => setSelectedYear(e.target.value)}
                   className="px-3 py-1.5 text-sm border border-[var(--gray-300)] rounded-[var(--radius-md)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
                 >
-                  <option value="2026">2026년</option>
-                  <option value="2025">2025년</option>
+                  {availableYears.map(year => (
+                    <option key={year} value={year}>{year}년</option>
+                  ))}
                 </select>
                 <Button variant="outline" size="sm">
                   <Download className="w-4 h-4 mr-1" />
@@ -245,44 +345,59 @@ export default function PaymentsPage() {
             </div>
           </CardHeader>
           <CardContent>
-            {filteredHistory.length > 0 ? (
+            {filteredPayments.length > 0 ? (
               <div className="divide-y divide-[var(--gray-100)]">
-                {filteredHistory.map((payment) => (
-                  <div
-                    key={payment.id}
-                    className="py-4 flex items-center justify-between"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 bg-[var(--success)]/10 rounded-full flex items-center justify-center">
-                        <CheckCircle className="w-5 h-5 text-[var(--success)]" />
+                {filteredPayments.map((payment) => {
+                  const config = payment.status ? statusConfig[payment.status] : statusConfig.pending;
+                  const PaymentStatusIcon = config.icon;
+
+                  return (
+                    <div
+                      key={payment.id}
+                      className="py-4 flex items-center justify-between"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className={`w-10 h-10 ${config.bgColor} rounded-full flex items-center justify-center`}>
+                          <PaymentStatusIcon className={`w-5 h-5 ${config.color}`} />
+                        </div>
+                        <div>
+                          <div className="font-medium text-[var(--gray-900)]">
+                            {formatDate(payment.paid_at)}
+                          </div>
+                          <div className="text-sm text-[var(--gray-500)]">
+                            {getPaymentMethodLabel(payment.pg_provider)}
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <div className="font-medium text-[var(--gray-900)]">
-                          {payment.date}
+                      <div className="flex items-center gap-4">
+                        <div className="text-right">
+                          <div className="font-medium text-[var(--gray-900)]">
+                            {payment.amount.toLocaleString()}원
+                          </div>
+                          <div className={`text-sm ${config.color}`}>{config.label}</div>
                         </div>
-                        <div className="text-sm text-[var(--gray-500)]">
-                          {payment.method}
-                        </div>
+                        {payment.receipt_url && (
+                          <Link
+                            href={payment.receipt_url}
+                            className="text-[var(--gray-400)] hover:text-[var(--primary)]"
+                            target="_blank"
+                          >
+                            <ChevronRight className="w-5 h-5" />
+                          </Link>
+                        )}
                       </div>
                     </div>
-                    <div className="flex items-center gap-4">
-                      <div className="text-right">
-                        <div className="font-medium text-[var(--gray-900)]">
-                          {payment.amount.toLocaleString()}원
-                        </div>
-                        <div className="text-sm text-[var(--success)]">완료</div>
-                      </div>
-                      <Link href={payment.receiptUrl} className="text-[var(--gray-400)] hover:text-[var(--primary)]">
-                        <ChevronRight className="w-5 h-5" />
-                      </Link>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <div className="text-center py-8">
                 <CreditCard className="w-12 h-12 text-[var(--gray-300)] mx-auto mb-3" />
-                <p className="text-[var(--gray-500)]">해당 연도의 납부 내역이 없습니다.</p>
+                <p className="text-[var(--gray-500)]">
+                  {payments.length === 0
+                    ? '아직 납부 내역이 없습니다.'
+                    : '해당 연도의 납부 내역이 없습니다.'}
+                </p>
               </div>
             )}
           </CardContent>
@@ -298,9 +413,11 @@ export default function PaymentsPage() {
               미납된 당비가 있거나 추가 납부를 원하시면 아래 버튼을 눌러 결제해 주세요.
             </p>
             <div className="flex gap-3">
-              <Button variant="primary">
-                당비 납부하기
-              </Button>
+              <Link href="/payment">
+                <Button variant="primary">
+                  당비 납부하기
+                </Button>
+              </Link>
               <Link href="/donate">
                 <Button variant="outline">
                   후원하기

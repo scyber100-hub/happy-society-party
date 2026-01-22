@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
+import { createClient } from '@/lib/supabase/server';
 import {
   Handshake,
   Scale,
@@ -20,7 +21,7 @@ const policyIcons: Record<number, React.ReactNode> = {
   6: <Bot className="w-10 h-10 text-[var(--primary)]" />,
 };
 
-// 최신 소식 더미 데이터
+// 최신 소식 더미 데이터 (추후 DB 연동 예정)
 const latestNews = [
   {
     id: 1,
@@ -79,7 +80,62 @@ const policies = [
   },
 ];
 
-export default function Home() {
+// 통계 데이터 가져오기
+async function getStats() {
+  const supabase = await createClient();
+
+  // 당원 수 (is_party_member가 true인 사용자)
+  const { count: memberCount } = await supabase
+    .from('user_profiles')
+    .select('*', { count: 'exact', head: true })
+    .eq('is_party_member', true);
+
+  // 전체 회원 수
+  const { count: totalUserCount } = await supabase
+    .from('user_profiles')
+    .select('*', { count: 'exact', head: true });
+
+  // 시/도 수 (region level 1)
+  const { count: regionCount } = await supabase
+    .from('regions')
+    .select('*', { count: 'exact', head: true })
+    .eq('level', 1);
+
+  // 지역 커뮤니티 수
+  const { count: regionCommunityCount } = await supabase
+    .from('communities')
+    .select('*', { count: 'exact', head: true })
+    .eq('type', 'region')
+    .eq('is_active', true);
+
+  // 상임위원회 수
+  const { count: committeeCount } = await supabase
+    .from('committees')
+    .select('*', { count: 'exact', head: true })
+    .eq('is_active', true);
+
+  return {
+    members: memberCount || totalUserCount || 0,
+    regions: regionCount || 17,
+    communities: regionCommunityCount || 0,
+    committees: committeeCount || 0,
+  };
+}
+
+export default async function Home() {
+  const stats = await getStats();
+
+  // 통계 표시 포맷팅
+  const formatStat = (value: number, minimum?: number) => {
+    if (minimum && value < minimum) {
+      return `${minimum}+`;
+    }
+    if (value >= 1000) {
+      return `${(value / 1000).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}K+`;
+    }
+    return value.toLocaleString();
+  };
+
   return (
     <div>
       {/* Hero Section */}
@@ -118,19 +174,29 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-3xl md:text-4xl font-bold text-[var(--primary)]">50,000+</div>
-              <div className="text-[var(--gray-600)] mt-1">당원 수</div>
+              <div className="text-3xl md:text-4xl font-bold text-[var(--primary)]">
+                {stats.members > 0 ? formatStat(stats.members) : '함께'}
+              </div>
+              <div className="text-[var(--gray-600)] mt-1">
+                {stats.members > 0 ? '당원 수' : '함께해요'}
+              </div>
             </div>
             <div>
-              <div className="text-3xl md:text-4xl font-bold text-[var(--primary)]">17</div>
+              <div className="text-3xl md:text-4xl font-bold text-[var(--primary)]">
+                {stats.regions}
+              </div>
               <div className="text-[var(--gray-600)] mt-1">시도당</div>
             </div>
             <div>
-              <div className="text-3xl md:text-4xl font-bold text-[var(--primary)]">200+</div>
+              <div className="text-3xl md:text-4xl font-bold text-[var(--primary)]">
+                {stats.communities > 0 ? formatStat(stats.communities) : '준비중'}
+              </div>
               <div className="text-[var(--gray-600)] mt-1">지역 커뮤니티</div>
             </div>
             <div>
-              <div className="text-3xl md:text-4xl font-bold text-[var(--primary)]">15</div>
+              <div className="text-3xl md:text-4xl font-bold text-[var(--primary)]">
+                {stats.committees > 0 ? stats.committees : '준비중'}
+              </div>
               <div className="text-[var(--gray-600)] mt-1">상임위원회</div>
             </div>
           </div>
