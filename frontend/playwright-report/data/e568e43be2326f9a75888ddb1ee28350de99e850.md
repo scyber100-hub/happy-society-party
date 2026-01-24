@@ -1,0 +1,213 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "행복사회당 로고 행복사회당" [ref=e5]:
+          - /url: /
+          - img "행복사회당 로고" [ref=e6]
+          - generic [ref=e7]: 행복사회당
+        - generic [ref=e8]:
+          - link "당 소개" [ref=e10]:
+            - /url: /about
+          - link "정책" [ref=e12]:
+            - /url: /policies
+          - link "소식" [ref=e14]:
+            - /url: /news
+          - link "참여" [ref=e16]:
+            - /url: /participate
+          - link "커뮤니티" [ref=e18]:
+            - /url: /community
+        - generic [ref=e19]:
+          - link "로그인" [ref=e20]:
+            - /url: /auth/login
+            - button "로그인" [ref=e21]
+          - link "입당하기" [ref=e22]:
+            - /url: /join
+            - button "입당하기" [ref=e23]
+  - main [ref=e24]:
+    - generic [ref=e25]:
+      - generic [ref=e28]:
+        - heading "1등이 아니어도 행복한 나라 부자가 아니어도 존엄한 나라" [level=1] [ref=e29]:
+          - text: 1등이 아니어도 행복한 나라
+          - text: 부자가 아니어도 존엄한 나라
+        - paragraph [ref=e30]: 기술과 미래가 사람을 위해 작동하는 나라
+        - paragraph [ref=e31]: 행복사회당은 경쟁이 아닌 협력을, 성장이 아닌 행복을, 효율이 아닌 존엄을 앞세웁니다. 새로운 진보정치의 길을 함께 열어주세요.
+        - generic [ref=e32]:
+          - link "입당하기" [ref=e33]:
+            - /url: /join
+            - button "입당하기" [ref=e34]
+          - link "창당선언문 보기" [ref=e35]:
+            - /url: /about/vision
+            - button "창당선언문 보기" [ref=e36]
+      - generic [ref=e39]:
+        - generic [ref=e40]:
+          - generic [ref=e41]: 50,000+
+          - generic [ref=e42]: 당원 수
+        - generic [ref=e43]:
+          - generic [ref=e44]: "17"
+          - generic [ref=e45]: 시도당
+        - generic [ref=e46]:
+          - generic [ref=e47]: 200+
+          - generic [ref=e48]: 지역 커뮤니티
+        - generic [ref=e49]:
+          - generic [ref=e50]: "15"
+          - generic [ref=e51]: 상임위원회
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - heading "핵심 가치와 정책" [level=2] [ref=e55]
+          - paragraph [ref=e56]: 행복사회당은 모든 시민의 행복과 존엄을 위한 7대 강령을 제시합니다.
+        - generic [ref=e57]:
+          - generic [ref=e58]:
+            - img [ref=e60]
+            - heading "협력사회" [level=3] [ref=e65]
+            - paragraph [ref=e67]: 무한 경쟁 대신 협력과 연대의 가치가 존중받는 사회를 만듭니다.
+          - generic [ref=e68]:
+            - img [ref=e70]
+            - heading "불평등 해소" [level=3] [ref=e74]
+            - paragraph [ref=e76]: 자산과 소득의 불평등을 해소하고 누구나 존엄한 삶을 보장합니다.
+          - generic [ref=e77]:
+            - img [ref=e79]
+            - heading "노동 존중" [level=3] [ref=e84]
+            - paragraph [ref=e86]: 일하는 사람이 정당한 대우를 받고 안전하게 일할 수 있게 합니다.
+          - generic [ref=e87]:
+            - img [ref=e89]
+            - heading "공공성 강화" [level=3] [ref=e92]
+            - paragraph [ref=e94]: 의료, 교육, 주거, 돌봄의 공공성을 강화하여 기본권을 보장합니다.
+          - generic [ref=e95]:
+            - img [ref=e97]
+            - heading "민주주의 확장" [level=3] [ref=e100]
+            - paragraph [ref=e102]: 정치를 넘어 경제와 일상에서도 민주주의를 실현합니다.
+          - generic [ref=e103]:
+            - img [ref=e105]
+            - heading "AI 시대 대응" [level=3] [ref=e108]
+            - paragraph [ref=e110]: AI와 기술 발전이 사람을 위해 작동하고 혜택이 공평하게 나눠지도록 합니다.
+        - link "강령 전문 보기" [ref=e112]:
+          - /url: /about/platform
+          - button "강령 전문 보기" [ref=e113]
+      - generic [ref=e115]:
+        - generic [ref=e116]:
+          - heading "최신 소식" [level=2] [ref=e117]
+          - paragraph [ref=e118]: 행복사회당의 활동과 소식을 확인하세요.
+        - generic [ref=e119]:
+          - generic [ref=e120]:
+            - generic [ref=e122]: 보도자료
+            - heading "행복사회당, 창당 기자회견 개최" [level=3] [ref=e123]
+            - paragraph [ref=e124]: 행복사회당은 "1등이 아니어도 행복한 나라, 부자가 아니어도 존엄한 나라"를 비전으로 창당을 선언하였습니다.
+            - generic [ref=e125]: 2026-01-15
+          - generic [ref=e126]:
+            - generic [ref=e128]: 성명서
+            - heading "AI 시대, 모든 시민을 위한 기술 정책 발표" [level=3] [ref=e129]
+            - paragraph [ref=e130]: 기술 발전의 혜택이 모든 시민에게 공평하게 돌아가도록 하는 정책 방향을 발표합니다.
+            - generic [ref=e131]: 2026-01-12
+          - generic [ref=e132]:
+            - generic [ref=e134]: 보도자료
+            - heading "전국 시도당 창당준비위원회 발족" [level=3] [ref=e135]
+            - paragraph [ref=e136]: 전국 17개 시도에서 창당준비위원회가 발족하여 지역 조직 구축에 나섭니다.
+            - generic [ref=e137]: 2026-01-10
+        - link "모든 소식 보기" [ref=e139]:
+          - /url: /news/press
+          - button "모든 소식 보기" [ref=e140]
+      - generic [ref=e142]:
+        - heading "새로운 진보정치의 길을 함께 열어주세요" [level=2] [ref=e143]
+        - paragraph [ref=e144]: 행복사회당은 시민과 함께 만들어갑니다. 당원이 되시면 지역 및 정책 커뮤니티에서 직접 참여할 수 있습니다.
+        - generic [ref=e145]:
+          - link "입당 신청하기" [ref=e146]:
+            - /url: /join
+            - button "입당 신청하기" [ref=e147]
+          - link "후원하기" [ref=e148]:
+            - /url: /donate
+            - button "후원하기" [ref=e149]
+  - contentinfo [ref=e150]:
+    - generic [ref=e151]:
+      - generic [ref=e152]:
+        - generic [ref=e153]:
+          - link "행복사회당 로고 행복사회당" [ref=e154]:
+            - /url: /
+            - img "행복사회당 로고" [ref=e155]
+            - generic [ref=e156]: 행복사회당
+          - paragraph [ref=e157]:
+            - text: 모든 국민의 행복을 위한
+            - text: 새로운 정치를 만들어갑니다.
+        - generic [ref=e158]:
+          - heading "당소개" [level=3] [ref=e159]
+          - list [ref=e160]:
+            - listitem [ref=e161]:
+              - link "비전과 가치" [ref=e162]:
+                - /url: /about/vision
+            - listitem [ref=e163]:
+              - link "역사" [ref=e164]:
+                - /url: /about/history
+            - listitem [ref=e165]:
+              - link "조직도" [ref=e166]:
+                - /url: /about/organization
+            - listitem [ref=e167]:
+              - link "당헌당규" [ref=e168]:
+                - /url: /about/constitution
+        - generic [ref=e169]:
+          - heading "정책" [level=3] [ref=e170]
+          - list [ref=e171]:
+            - listitem [ref=e172]:
+              - link "경제정책" [ref=e173]:
+                - /url: /policies?category=economy
+            - listitem [ref=e174]:
+              - link "사회정책" [ref=e175]:
+                - /url: /policies?category=social
+            - listitem [ref=e176]:
+              - link "환경정책" [ref=e177]:
+                - /url: /policies?category=environment
+        - generic [ref=e178]:
+          - heading "소식" [level=3] [ref=e179]
+          - list [ref=e180]:
+            - listitem [ref=e181]:
+              - link "보도자료" [ref=e182]:
+                - /url: /news/press
+            - listitem [ref=e183]:
+              - link "성명서" [ref=e184]:
+                - /url: /news/statements
+            - listitem [ref=e185]:
+              - link "일정" [ref=e186]:
+                - /url: /news/schedule
+        - generic [ref=e187]:
+          - heading "참여" [level=3] [ref=e188]
+          - list [ref=e189]:
+            - listitem [ref=e190]:
+              - link "입당 안내" [ref=e191]:
+                - /url: /join
+            - listitem [ref=e192]:
+              - link "후원 안내" [ref=e193]:
+                - /url: /donate
+            - listitem [ref=e194]:
+              - link "커뮤니티" [ref=e195]:
+                - /url: /community
+      - generic [ref=e197]:
+        - generic [ref=e198]:
+          - paragraph [ref=e199]: "주소: 서울특별시 영등포구 국회대로 00길 00"
+          - paragraph [ref=e200]: "전화: 02-0000-0000 | 팩스: 02-0000-0001"
+          - paragraph [ref=e201]: "이메일: contact@happysociety.kr"
+        - generic [ref=e203]:
+          - link "Facebook" [ref=e204]:
+            - /url: "#"
+            - generic [ref=e205]: Facebook
+            - img [ref=e206]
+          - link "YouTube" [ref=e208]:
+            - /url: "#"
+            - generic [ref=e209]: YouTube
+            - img [ref=e210]
+          - link "Instagram" [ref=e212]:
+            - /url: "#"
+            - generic [ref=e213]: Instagram
+            - img [ref=e214]
+      - generic [ref=e216]:
+        - paragraph [ref=e217]: © 2026 행복사회당. All rights reserved.
+        - generic [ref=e218]:
+          - link "개인정보처리방침" [ref=e219]:
+            - /url: /privacy
+          - link "이용약관" [ref=e220]:
+            - /url: /terms
+  - button "Open Next.js Dev Tools" [ref=e226] [cursor=pointer]:
+    - img [ref=e227]
+  - alert [ref=e232]
+```

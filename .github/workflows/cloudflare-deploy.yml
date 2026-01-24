@@ -32,13 +32,13 @@ jobs:
         working-directory: frontend
         run: npm ci
 
-      - name: Build
+      - name: Build with @cloudflare/next-on-pages
         working-directory: frontend
         env:
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
           NEXT_PUBLIC_TOSS_PAYMENTS_CLIENT_KEY: ${{ secrets.NEXT_PUBLIC_TOSS_PAYMENTS_CLIENT_KEY }}
-        run: npm run build
+        run: npx @cloudflare/next-on-pages
 
       - name: Deploy to Cloudflare Pages (Staging)
         if: github.ref == 'refs/heads/develop'
@@ -46,7 +46,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy frontend/.next/standalone --project-name=happy-society-party-staging --commit-dirty=true
+          command: pages deploy frontend/.vercel/output/static --project-name=happy-society-party-staging --commit-dirty=true
           workingDirectory: .
 
       - name: Deploy to Cloudflare Pages (Production)
@@ -55,7 +55,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy frontend/.next/standalone --project-name=happy-society-party --commit-dirty=true
+          command: pages deploy frontend/.vercel/output/static --project-name=happy-society-party --commit-dirty=true
           workingDirectory: .
 
       - name: Comment on PR

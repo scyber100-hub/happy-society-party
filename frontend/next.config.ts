@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
   images: {
     domains: ['tzhkmnkhqdbskwcpvhqx.supabase.co'],
     unoptimized: true,

@@ -1,0 +1,141 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - navigation [ref=e3]:
+      - generic [ref=e4]:
+        - link "행복사회당 로고 행복사회당" [ref=e5]:
+          - /url: /
+          - img "행복사회당 로고" [ref=e6]
+          - generic [ref=e7]: 행복사회당
+        - button [ref=e8]:
+          - img [ref=e9]
+  - main [ref=e11]:
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - link "행복사회당 로고" [ref=e15]:
+          - /url: /
+          - img "행복사회당 로고" [ref=e16]
+        - heading "로그인" [level=1] [ref=e17]
+        - paragraph [ref=e18]: 행복사회당 회원 포털에 오신 것을 환영합니다.
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - generic [ref=e21]:
+            - generic [ref=e22]: 이메일*
+            - textbox "이메일*" [ref=e23]:
+              - /placeholder: example@email.com
+          - generic [ref=e24]:
+            - generic [ref=e25]: 비밀번호*
+            - textbox "비밀번호*" [ref=e26]:
+              - /placeholder: 비밀번호 입력
+          - generic [ref=e27]:
+            - generic [ref=e28] [cursor=pointer]:
+              - checkbox "로그인 상태 유지" [ref=e29]
+              - generic [ref=e30]: 로그인 상태 유지
+            - link "비밀번호 찾기" [ref=e31]:
+              - /url: /auth/forgot-password
+          - button "로그인" [ref=e32]
+        - generic [ref=e37]: 또는
+        - generic [ref=e38]:
+          - button "Google로 계속하기" [ref=e39]:
+            - img [ref=e40]
+            - generic [ref=e45]: Google로 계속하기
+          - button "카카오로 계속하기" [ref=e46]:
+            - img [ref=e47]
+            - generic [ref=e49]: 카카오로 계속하기
+      - paragraph [ref=e50]:
+        - text: 아직 당원이 아니신가요?
+        - link "입당 신청하기" [ref=e51]:
+          - /url: /join
+  - contentinfo [ref=e52]:
+    - generic [ref=e53]:
+      - generic [ref=e54]:
+        - generic [ref=e55]:
+          - link "행복사회당 로고 행복사회당" [ref=e56]:
+            - /url: /
+            - img "행복사회당 로고" [ref=e57]
+            - generic [ref=e58]: 행복사회당
+          - paragraph [ref=e59]:
+            - text: 모든 국민의 행복을 위한
+            - text: 새로운 정치를 만들어갑니다.
+        - generic [ref=e60]:
+          - heading "당소개" [level=3] [ref=e61]
+          - list [ref=e62]:
+            - listitem [ref=e63]:
+              - link "비전과 가치" [ref=e64]:
+                - /url: /about/vision
+            - listitem [ref=e65]:
+              - link "역사" [ref=e66]:
+                - /url: /about/history
+            - listitem [ref=e67]:
+              - link "조직도" [ref=e68]:
+                - /url: /about/organization
+            - listitem [ref=e69]:
+              - link "당헌당규" [ref=e70]:
+                - /url: /about/constitution
+        - generic [ref=e71]:
+          - heading "정책" [level=3] [ref=e72]
+          - list [ref=e73]:
+            - listitem [ref=e74]:
+              - link "경제정책" [ref=e75]:
+                - /url: /policies?category=economy
+            - listitem [ref=e76]:
+              - link "사회정책" [ref=e77]:
+                - /url: /policies?category=social
+            - listitem [ref=e78]:
+              - link "환경정책" [ref=e79]:
+                - /url: /policies?category=environment
+        - generic [ref=e80]:
+          - heading "소식" [level=3] [ref=e81]
+          - list [ref=e82]:
+            - listitem [ref=e83]:
+              - link "보도자료" [ref=e84]:
+                - /url: /news/press
+            - listitem [ref=e85]:
+              - link "성명서" [ref=e86]:
+                - /url: /news/statements
+            - listitem [ref=e87]:
+              - link "일정" [ref=e88]:
+                - /url: /news/schedule
+        - generic [ref=e89]:
+          - heading "참여" [level=3] [ref=e90]
+          - list [ref=e91]:
+            - listitem [ref=e92]:
+              - link "입당 안내" [ref=e93]:
+                - /url: /join
+            - listitem [ref=e94]:
+              - link "후원 안내" [ref=e95]:
+                - /url: /donate
+            - listitem [ref=e96]:
+              - link "커뮤니티" [ref=e97]:
+                - /url: /community
+      - generic [ref=e99]:
+        - generic [ref=e100]:
+          - paragraph [ref=e101]: "주소: 서울특별시 영등포구 국회대로 00길 00"
+          - paragraph [ref=e102]: "전화: 02-0000-0000 | 팩스: 02-0000-0001"
+          - paragraph [ref=e103]: "이메일: contact@happysociety.kr"
+        - generic [ref=e105]:
+          - link "Facebook" [ref=e106]:
+            - /url: "#"
+            - generic [ref=e107]: Facebook
+            - img [ref=e108]
+          - link "YouTube" [ref=e110]:
+            - /url: "#"
+            - generic [ref=e111]: YouTube
+            - img [ref=e112]
+          - link "Instagram" [ref=e114]:
+            - /url: "#"
+            - generic [ref=e115]: Instagram
+            - img [ref=e116]
+      - generic [ref=e118]:
+        - paragraph [ref=e119]: © 2026 행복사회당. All rights reserved.
+        - generic [ref=e120]:
+          - link "개인정보처리방침" [ref=e121]:
+            - /url: /privacy
+          - link "이용약관" [ref=e122]:
+            - /url: /terms
+  - button "Open Next.js Dev Tools" [ref=e128] [cursor=pointer]:
+    - img [ref=e129]
+  - alert [ref=e134]: 행복사회당 | 모든 국민의 행복을 위한 정당
+```
