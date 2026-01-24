@@ -45,7 +45,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy frontend/.next/standalone --project-name=happy-society-party-staging
+          command: pages deploy frontend/.next/standalone --project-name=happy-society-party-staging --commit-dirty=true
           workingDirectory: .
 
       - name: Deploy to Cloudflare Pages (Production)
@@ -54,7 +54,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy frontend/.next/standalone --project-name=happy-society-party
+          command: pages deploy frontend/.next/standalone --project-name=happy-society-party --commit-dirty=true
           workingDirectory: .
 
       - name: Comment on PR
