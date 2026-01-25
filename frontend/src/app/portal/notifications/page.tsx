@@ -12,7 +12,6 @@ import {
   Bell,
   MessageSquare,
   Heart,
-  FileText,
   Settings,
   Filter,
   Loader2,

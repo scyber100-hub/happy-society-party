@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
@@ -9,64 +9,70 @@ import {
   Search,
   ChevronRight,
   ArrowLeft,
+  Loader2,
 } from 'lucide-react';
 
-// 성명서 데이터
-const statementsData = [
-  {
-    id: 'news-002',
-    title: 'AI 시대, 모든 시민을 위한 기술 정책 발표',
-    excerpt: '기술 발전의 혜택이 모든 시민에게 공평하게 돌아가도록 하는 정책 방향을 발표합니다. AI 윤리 가이드라인과 디지털 격차 해소 방안을 담았습니다.',
-    date: '2026-01-14',
-    author: '정책위원회',
-  },
-  {
-    id: 'news-004',
-    title: '기후위기 대응을 위한 긴급 성명',
-    excerpt: '기후위기는 더 이상 미래의 문제가 아닙니다. 행복사회당은 2035년 재생에너지 50% 달성을 위한 구체적인 로드맵을 제시합니다.',
-    date: '2026-01-10',
-    author: '환경위원회',
-  },
-  {
-    id: 'news-007',
-    title: '노동자 권리 보장을 위한 입장문',
-    excerpt: '최근 노동 현장에서 발생한 사고에 대해 깊은 애도를 표하며, 노동자의 안전과 권리를 보장하기 위한 우리의 입장을 밝힙니다.',
-    date: '2026-01-05',
-    author: '노동위원회',
-  },
-  {
-    id: 'statement-004',
-    title: '주거권 보장을 위한 정책 제안',
-    excerpt: '치솟는 집값과 전세난으로 고통받는 시민들을 위해 공공임대주택 확대와 투기 억제 방안을 제안합니다.',
-    date: '2026-01-03',
-    author: '주거위원회',
-  },
-  {
-    id: 'statement-005',
-    title: '교육 불평등 해소를 위한 입장',
-    excerpt: '부모의 경제력이 자녀의 미래를 결정하는 현실을 바꾸기 위한 교육 정책 방향을 제시합니다.',
-    date: '2026-01-01',
-    author: '교육위원회',
-  },
-  {
-    id: 'statement-006',
-    title: '새해를 맞아 국민께 드리는 말씀',
-    excerpt: '2026년 새해를 맞아 행복사회당의 비전과 다짐을 국민 여러분께 전합니다.',
-    date: '2026-01-01',
-    author: '당 대표',
-  },
-];
+interface NewsItem {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string | null;
+  author: string | null;
+  published_at: string;
+}
 
 export default function StatementsPage() {
+  const [newsData, setNewsData] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
+  useEffect(() => {
+    async function fetchNews() {
+      setLoading(true);
+      try {
+        const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/news?is_published=eq.true&category=eq.statement&select=id,slug,title,excerpt,author,published_at&order=published_at.desc`;
+        const response = await fetch(url, {
+          headers: {
+            'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+          },
+        });
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setNewsData(data);
+        }
+      } catch (e) {
+        console.error('Fetch error:', e);
+      }
+      setLoading(false);
+    }
+
+    fetchNews();
+  }, []);
+
   const filteredStatements = useMemo(() => {
-    return statementsData.filter((news) => {
+    return newsData.filter((news) => {
       return searchQuery === '' ||
         news.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        news.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+        (news.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
     });
-  }, [searchQuery]);
+  }, [newsData, searchQuery]);
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-[var(--primary)]" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -120,12 +126,12 @@ export default function StatementsPage() {
               </div>
               <div className="space-y-4">
                 {filteredStatements.map((news) => (
-                  <Link key={news.id} href={`/news/${news.id}`}>
+                  <Link key={news.id} href={`/news/${news.slug}`}>
                     <Card variant="bordered" className="hover:shadow-[var(--shadow-md)] hover:border-[var(--primary)] transition-all cursor-pointer">
                       <div className="flex flex-col md:flex-row md:items-center gap-4">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
-                            <span className="text-sm text-[var(--gray-400)]">{news.date}</span>
+                            <span className="text-sm text-[var(--gray-400)]">{formatDate(news.published_at)}</span>
                             <span className="text-sm text-[var(--gray-300)]">|</span>
                             <span className="text-sm text-[var(--gray-500)]">{news.author}</span>
                           </div>

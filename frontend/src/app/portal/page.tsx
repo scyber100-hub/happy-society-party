@@ -178,7 +178,6 @@ export default function PortalPage() {
 
     // 당비 납부 상태 확인
     const currentYear = new Date().getFullYear();
-    const currentMonth = new Date().getMonth() + 1;
 
     const { data: payment } = await supabase
       .from('payments')

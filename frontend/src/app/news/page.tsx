@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
@@ -10,6 +10,7 @@ import {
   Calendar,
   Search,
   ChevronRight,
+  Loader2,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -21,113 +22,61 @@ const categories: { id: string; name: string; icon: LucideIcon; href: string }[]
   { id: 'schedule', name: '일정', icon: Calendar, href: '/news/schedule' },
 ];
 
-// 뉴스 데이터 (향후 DB에서 가져올 예정)
-const newsData = [
-  {
-    id: 'news-001',
-    category: 'press',
-    title: '행복사회당, 창당 기자회견 개최',
-    excerpt: '행복사회당은 "1등이 아니어도 행복한 나라, 부자가 아니어도 존엄한 나라"를 비전으로 창당을 선언하였습니다. 새로운 진보정치의 시작을 알리는 역사적인 순간입니다.',
-    content: '',
-    date: '2026-01-15',
-    author: '홍보위원회',
-    thumbnail: null,
-    featured: true,
-  },
-  {
-    id: 'news-002',
-    category: 'statement',
-    title: 'AI 시대, 모든 시민을 위한 기술 정책 발표',
-    excerpt: '기술 발전의 혜택이 모든 시민에게 공평하게 돌아가도록 하는 정책 방향을 발표합니다. AI 윤리 가이드라인과 디지털 격차 해소 방안을 담았습니다.',
-    content: '',
-    date: '2026-01-14',
-    author: '정책위원회',
-    thumbnail: null,
-    featured: true,
-  },
-  {
-    id: 'news-003',
-    category: 'press',
-    title: '전국 시도당 창당준비위원회 발족',
-    excerpt: '전국 17개 시도에서 창당준비위원회가 발족하여 지역 조직 구축에 나섭니다. 풀뿌리 민주주의의 실현을 위한 첫걸음입니다.',
-    content: '',
-    date: '2026-01-12',
-    author: '조직위원회',
-    thumbnail: null,
-    featured: false,
-  },
-  {
-    id: 'news-004',
-    category: 'statement',
-    title: '기후위기 대응을 위한 긴급 성명',
-    excerpt: '기후위기는 더 이상 미래의 문제가 아닙니다. 행복사회당은 2035년 재생에너지 50% 달성을 위한 구체적인 로드맵을 제시합니다.',
-    content: '',
-    date: '2026-01-10',
-    author: '환경위원회',
-    thumbnail: null,
-    featured: false,
-  },
-  {
-    id: 'news-005',
-    category: 'press',
-    title: '청년위원회 출범 및 청년정책 발표',
-    excerpt: '청년의 목소리를 정치에 담기 위한 청년위원회가 출범했습니다. 주거, 일자리, 교육 등 청년 현안에 대한 정책을 발표합니다.',
-    content: '',
-    date: '2026-01-08',
-    author: '청년위원회',
-    thumbnail: null,
-    featured: false,
-  },
-  {
-    id: 'news-006',
-    category: 'schedule',
-    title: '2026년 1월 당원 교육 프로그램 안내',
-    excerpt: '신규 당원을 위한 입문 교육과 기존 당원을 위한 심화 교육 프로그램을 안내드립니다. 온라인과 오프라인 모두 참여 가능합니다.',
-    content: '',
-    date: '2026-01-07',
-    author: '교육위원회',
-    thumbnail: null,
-    featured: false,
-  },
-  {
-    id: 'news-007',
-    category: 'statement',
-    title: '노동자 권리 보장을 위한 입장문',
-    excerpt: '최근 노동 현장에서 발생한 사고에 대해 깊은 애도를 표하며, 노동자의 안전과 권리를 보장하기 위한 우리의 입장을 밝힙니다.',
-    content: '',
-    date: '2026-01-05',
-    author: '노동위원회',
-    thumbnail: null,
-    featured: false,
-  },
-  {
-    id: 'news-008',
-    category: 'schedule',
-    title: '전국 순회 당원 간담회 일정',
-    excerpt: '전국 17개 시도를 순회하며 당원 여러분의 목소리를 직접 듣는 간담회를 개최합니다. 많은 참여 부탁드립니다.',
-    content: '',
-    date: '2026-01-03',
-    author: '조직위원회',
-    thumbnail: null,
-    featured: false,
-  },
-];
+interface NewsItem {
+  id: string;
+  slug: string;
+  category: string;
+  title: string;
+  excerpt: string | null;
+  author: string | null;
+  thumbnail_url: string | null;
+  is_featured: boolean;
+  published_at: string;
+}
 
 export default function NewsPage() {
+  const [newsData, setNewsData] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    async function fetchNews() {
+      setLoading(true);
+      try {
+        const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/news?is_published=eq.true&select=id,slug,category,title,excerpt,author,thumbnail_url,is_featured,published_at&order=published_at.desc`;
+        const response = await fetch(url, {
+          headers: {
+            'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+          },
+        });
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setNewsData(data);
+        }
+      } catch (e) {
+        console.error('Fetch error:', e);
+      }
+      setLoading(false);
+    }
+
+    fetchNews();
+  }, []);
 
   const filteredNews = useMemo(() => {
     return newsData.filter((news) => {
       const matchesCategory = selectedCategory === 'all' || news.category === selectedCategory;
       const matchesSearch = searchQuery === '' ||
         news.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        news.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+        (news.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
       return matchesCategory && matchesSearch;
     });
-  }, [selectedCategory, searchQuery]);
+  }, [newsData, selectedCategory, searchQuery]);
 
-  const featuredNews = newsData.filter(news => news.featured);
+  const featuredNews = useMemo(() => {
+    return newsData.filter(news => news.is_featured);
+  }, [newsData]);
 
   const getCategoryName = (categoryId: string) => {
     const cat = categories.find(c => c.id === categoryId);
@@ -142,6 +91,22 @@ export default function NewsPage() {
       default: return <Newspaper className="w-4 h-4" />;
     }
   };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-[var(--primary)]" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -163,14 +128,14 @@ export default function NewsPage() {
             <h2 className="text-2xl font-bold text-[var(--gray-900)] mb-6">주요 소식</h2>
             <div className="grid md:grid-cols-2 gap-6">
               {featuredNews.map((news) => (
-                <Link key={news.id} href={`/news/${news.id}`}>
+                <Link key={news.id} href={`/news/${news.slug}`}>
                   <Card variant="bordered" className="h-full hover:shadow-[var(--shadow-lg)] hover:border-[var(--primary)] transition-all cursor-pointer bg-white">
                     <div className="flex items-center gap-2 mb-3">
                       <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium text-[var(--primary)] bg-[var(--primary-light)] rounded-full">
                         {getCategoryIcon(news.category)}
                         {getCategoryName(news.category)}
                       </span>
-                      <span className="text-sm text-[var(--gray-400)]">{news.date}</span>
+                      <span className="text-sm text-[var(--gray-400)]">{formatDate(news.published_at)}</span>
                     </div>
                     <h3 className="text-xl font-bold text-[var(--gray-900)] mb-3 line-clamp-2">
                       {news.title}
@@ -246,7 +211,7 @@ export default function NewsPage() {
               </div>
               <div className="space-y-4">
                 {filteredNews.map((news) => (
-                  <Link key={news.id} href={`/news/${news.id}`}>
+                  <Link key={news.id} href={`/news/${news.slug}`}>
                     <Card variant="bordered" className="hover:shadow-[var(--shadow-md)] hover:border-[var(--primary)] transition-all cursor-pointer">
                       <div className="flex flex-col md:flex-row md:items-center gap-4">
                         <div className="flex-1">
@@ -255,7 +220,7 @@ export default function NewsPage() {
                               {getCategoryIcon(news.category)}
                               {getCategoryName(news.category)}
                             </span>
-                            <span className="text-sm text-[var(--gray-400)]">{news.date}</span>
+                            <span className="text-sm text-[var(--gray-400)]">{formatDate(news.published_at)}</span>
                           </div>
                           <h3 className="text-lg font-bold text-[var(--gray-900)] mb-2 line-clamp-1">
                             {news.title}

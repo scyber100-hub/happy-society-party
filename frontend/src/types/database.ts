@@ -606,6 +606,54 @@ export type Database = {
           },
         ]
       }
+      news: {
+        Row: {
+          id: string
+          slug: string
+          category: string
+          title: string
+          excerpt: string | null
+          content: string | null
+          author: string | null
+          thumbnail_url: string | null
+          is_featured: boolean
+          is_published: boolean
+          published_at: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          slug: string
+          category: string
+          title: string
+          excerpt?: string | null
+          content?: string | null
+          author?: string | null
+          thumbnail_url?: string | null
+          is_featured?: boolean
+          is_published?: boolean
+          published_at?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          slug?: string
+          category?: string
+          title?: string
+          excerpt?: string | null
+          content?: string | null
+          author?: string | null
+          thumbnail_url?: string | null
+          is_featured?: boolean
+          is_published?: boolean
+          published_at?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -769,3 +817,4 @@ export type PaymentType = Enums<'payment_type'>
 export type ReportStatus = Enums<'report_status'>
 export type ReportTargetType = Enums<'report_target_type'>
 export type SiteSettings = Tables<'site_settings'>
+export type News = Tables<'news'>

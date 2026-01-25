@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
@@ -9,64 +9,70 @@ import {
   Search,
   ChevronRight,
   ArrowLeft,
+  Loader2,
 } from 'lucide-react';
 
-// 보도자료 데이터
-const pressData = [
-  {
-    id: 'news-001',
-    title: '행복사회당, 창당 기자회견 개최',
-    excerpt: '행복사회당은 "1등이 아니어도 행복한 나라, 부자가 아니어도 존엄한 나라"를 비전으로 창당을 선언하였습니다. 새로운 진보정치의 시작을 알리는 역사적인 순간입니다.',
-    date: '2026-01-15',
-    author: '홍보위원회',
-  },
-  {
-    id: 'news-003',
-    title: '전국 시도당 창당준비위원회 발족',
-    excerpt: '전국 17개 시도에서 창당준비위원회가 발족하여 지역 조직 구축에 나섭니다. 풀뿌리 민주주의의 실현을 위한 첫걸음입니다.',
-    date: '2026-01-12',
-    author: '조직위원회',
-  },
-  {
-    id: 'news-005',
-    title: '청년위원회 출범 및 청년정책 발표',
-    excerpt: '청년의 목소리를 정치에 담기 위한 청년위원회가 출범했습니다. 주거, 일자리, 교육 등 청년 현안에 대한 정책을 발표합니다.',
-    date: '2026-01-08',
-    author: '청년위원회',
-  },
-  {
-    id: 'press-004',
-    title: '행복사회당, 첫 정책위원회 회의 개최',
-    excerpt: '창당 이후 첫 정책위원회 전체회의가 개최되었습니다. 7대 강령에 기반한 구체적인 정책 수립 방향을 논의했습니다.',
-    date: '2026-01-06',
-    author: '정책위원회',
-  },
-  {
-    id: 'press-005',
-    title: '당 대표단, 시민사회 단체와 간담회',
-    excerpt: '환경, 노동, 여성, 장애인 등 다양한 시민사회 단체와 간담회를 갖고 정책 협력 방안을 논의했습니다.',
-    date: '2026-01-04',
-    author: '홍보위원회',
-  },
-  {
-    id: 'press-006',
-    title: '온라인 당원 가입 시스템 오픈',
-    excerpt: '홈페이지를 통한 온라인 입당 신청 시스템이 정식 오픈되었습니다. 더 많은 시민들의 참여를 기대합니다.',
-    date: '2026-01-02',
-    author: '홍보위원회',
-  },
-];
+interface NewsItem {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string | null;
+  author: string | null;
+  published_at: string;
+}
 
 export default function PressPage() {
+  const [newsData, setNewsData] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
+  useEffect(() => {
+    async function fetchNews() {
+      setLoading(true);
+      try {
+        const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/news?is_published=eq.true&category=eq.press&select=id,slug,title,excerpt,author,published_at&order=published_at.desc`;
+        const response = await fetch(url, {
+          headers: {
+            'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+            'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+          },
+        });
+        const data = await response.json();
+        if (Array.isArray(data)) {
+          setNewsData(data);
+        }
+      } catch (e) {
+        console.error('Fetch error:', e);
+      }
+      setLoading(false);
+    }
+
+    fetchNews();
+  }, []);
+
   const filteredPress = useMemo(() => {
-    return pressData.filter((news) => {
+    return newsData.filter((news) => {
       return searchQuery === '' ||
         news.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        news.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+        (news.excerpt?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false);
     });
-  }, [searchQuery]);
+  }, [newsData, searchQuery]);
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-[var(--primary)]" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
@@ -120,12 +126,12 @@ export default function PressPage() {
               </div>
               <div className="space-y-4">
                 {filteredPress.map((news) => (
-                  <Link key={news.id} href={`/news/${news.id}`}>
+                  <Link key={news.id} href={`/news/${news.slug}`}>
                     <Card variant="bordered" className="hover:shadow-[var(--shadow-md)] hover:border-[var(--primary)] transition-all cursor-pointer">
                       <div className="flex flex-col md:flex-row md:items-center gap-4">
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
-                            <span className="text-sm text-[var(--gray-400)]">{news.date}</span>
+                            <span className="text-sm text-[var(--gray-400)]">{formatDate(news.published_at)}</span>
                             <span className="text-sm text-[var(--gray-300)]">|</span>
                             <span className="text-sm text-[var(--gray-500)]">{news.author}</span>
                           </div>
