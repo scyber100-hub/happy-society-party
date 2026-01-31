@@ -11,6 +11,7 @@ const navigation = [
     href: '/about',
     children: [
       { name: '비전과 가치', href: '/about/vision' },
+      { name: '강령', href: '/about/platform' },
       { name: '역사', href: '/about/history' },
       { name: '조직도', href: '/about/organization' },
       { name: '당헌당규', href: '/about/constitution' },
