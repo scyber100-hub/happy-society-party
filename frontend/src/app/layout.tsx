@@ -15,6 +15,10 @@ export const metadata: Metadata = {
   title: "행복사회당 | 모든 국민의 행복을 위한 정당",
   description: "행복사회당은 모든 국민의 행복을 최우선 가치로 삼아, 공정하고 지속가능한 사회를 만들어가는 정당입니다.",
   keywords: ["행복사회당", "정당", "정치", "민주주의", "복지", "정책"],
+  icons: {
+    icon: "/icon.svg",
+    apple: "/icon.svg",
+  },
   openGraph: {
     title: "행복사회당",
     description: "모든 국민의 행복을 위한 정당",

@@ -142,7 +142,7 @@ export default async function RegionCommunityPage({ params }: Props) {
 
         {/* Pagination */}
         <div className="flex justify-center gap-2 mt-8">
-          <button className="px-4 py-2 rounded-[var(--radius-md)] bg-[var(--primary)] text-white">1</button>
+          <button className="px-4 py-2 rounded-[var(--radius-md)]" style={{ backgroundColor: '#1F6F6B', color: '#ffffff' }}>1</button>
           <button className="px-4 py-2 rounded-[var(--radius-md)] border border-[var(--gray-300)] hover:bg-[var(--gray-50)]">2</button>
           <button className="px-4 py-2 rounded-[var(--radius-md)] border border-[var(--gray-300)] hover:bg-[var(--gray-50)]">3</button>
           <button className="px-4 py-2 rounded-[var(--radius-md)] border border-[var(--gray-300)] hover:bg-[var(--gray-50)]">다음</button>

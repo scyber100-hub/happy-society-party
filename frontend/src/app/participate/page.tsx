@@ -87,7 +87,8 @@ export default function ParticipatePage() {
                   </p>
                   <Link
                     href={option.href}
-                    className="inline-block w-full text-center bg-[var(--primary)] text-white px-6 py-3 rounded-[var(--radius-md)] font-semibold hover:bg-[var(--primary-dark)] transition-colors"
+                    className="inline-block w-full text-center px-6 py-3 rounded-[var(--radius-md)] font-semibold hover:opacity-90 transition-colors"
+                    style={{ backgroundColor: '#1F6F6B', color: '#ffffff' }}
                   >
                     {option.cta}
                   </Link>
@@ -173,7 +174,8 @@ export default function ParticipatePage() {
           </p>
           <Link
             href="/join"
-            className="inline-block bg-white text-[var(--primary)] px-8 py-4 rounded-[var(--radius-md)] font-semibold hover:bg-[var(--gray-100)] transition-colors"
+            className="inline-block px-8 py-4 rounded-[var(--radius-md)] font-semibold hover:opacity-90 transition-colors"
+            style={{ backgroundColor: '#ffffff', color: '#1F6F6B' }}
           >
             입당 신청하기
           </Link>

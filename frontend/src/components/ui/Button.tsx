@@ -1,6 +1,6 @@
 'use client';
 
-import { ButtonHTMLAttributes, forwardRef } from 'react';
+import { ButtonHTMLAttributes, forwardRef, CSSProperties } from 'react';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
 type ButtonSize = 'sm' | 'md' | 'lg';
@@ -12,12 +12,28 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean;
 }
 
-const variantStyles: Record<ButtonVariant, string> = {
-  primary: 'bg-[var(--primary)] text-white hover:bg-[var(--primary-dark)] focus:ring-[var(--primary)]',
-  secondary: 'bg-[var(--secondary)] text-white hover:opacity-90 focus:ring-[var(--secondary)]',
-  outline: 'border-2 border-[var(--primary)] text-[var(--primary)] hover:bg-[var(--primary-light)] focus:ring-[var(--primary)]',
-  ghost: 'text-[var(--gray-600)] hover:bg-[var(--gray-100)] focus:ring-[var(--gray-300)]',
-  danger: 'bg-[var(--error)] text-white hover:opacity-90 focus:ring-[var(--error)]',
+const variantInlineStyles: Record<ButtonVariant, CSSProperties> = {
+  primary: {
+    backgroundColor: '#1F6F6B',
+    color: '#ffffff',
+  },
+  secondary: {
+    backgroundColor: '#F5A623',
+    color: '#ffffff',
+  },
+  outline: {
+    backgroundColor: 'transparent',
+    color: '#1F6F6B',
+    border: '2px solid #1F6F6B',
+  },
+  ghost: {
+    backgroundColor: 'transparent',
+    color: '#4B5563',
+  },
+  danger: {
+    backgroundColor: '#DC2626',
+    color: '#ffffff',
+  },
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
@@ -35,11 +51,23 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       fullWidth = false,
       disabled,
       className = '',
+      style,
       children,
       ...props
     },
     ref
   ) => {
+    // className에 text- 또는 bg-가 포함되어 있으면 해당 인라인 스타일을 적용하지 않음
+    const hasCustomTextColor = className.includes('text-');
+    const hasCustomBgColor = className.includes('bg-');
+
+    const computedStyle: CSSProperties = {
+      ...variantInlineStyles[variant],
+      ...(hasCustomTextColor ? { color: undefined } : {}),
+      ...(hasCustomBgColor ? { backgroundColor: undefined } : {}),
+      ...style,
+    };
+
     return (
       <button
         ref={ref}
@@ -50,11 +78,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           transition-all duration-200
           focus:outline-none focus:ring-2 focus:ring-offset-2
           disabled:opacity-50 disabled:cursor-not-allowed
-          ${variantStyles[variant]}
+          hover:opacity-90
           ${sizeStyles[size]}
           ${fullWidth ? 'w-full' : ''}
           ${className}
         `}
+        style={computedStyle}
         {...props}
       >
         {isLoading ? (

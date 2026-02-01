@@ -206,10 +206,16 @@ export default function ConstitutionPage() {
             당헌·당규 전문을 PDF로 다운로드하실 수 있습니다.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <button className="bg-white text-[var(--primary)] px-8 py-4 rounded-[var(--radius-md)] font-semibold hover:bg-white/90 transition-colors">
+            <button
+              className="px-8 py-4 rounded-[var(--radius-md)] font-semibold hover:opacity-90 transition-colors"
+              style={{ backgroundColor: '#ffffff', color: '#1F6F6B' }}
+            >
               당헌 전문 다운로드
             </button>
-            <button className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-[var(--radius-md)] font-semibold hover:bg-white/10 transition-colors">
+            <button
+              className="bg-transparent border-2 px-8 py-4 rounded-[var(--radius-md)] font-semibold hover:bg-white/10 transition-colors"
+              style={{ borderColor: '#ffffff', color: '#ffffff' }}
+            >
               당규 전문 다운로드
             </button>
           </div>

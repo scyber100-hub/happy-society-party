@@ -327,7 +327,8 @@ export default function VisionPage() {
           </p>
           <a
             href="/join"
-            className="inline-block bg-[var(--primary)] text-white px-8 py-4 rounded-[var(--radius-md)] font-semibold hover:bg-[var(--primary-dark)] transition-colors"
+            className="inline-block px-8 py-4 rounded-[var(--radius-md)] font-semibold hover:opacity-90 transition-colors"
+            style={{ backgroundColor: '#1F6F6B', color: '#ffffff' }}
           >
             입당 신청하기
           </a>
