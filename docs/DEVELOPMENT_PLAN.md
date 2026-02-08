@@ -181,4 +181,181 @@ payments       - 결제 내역
 
 ---
 
+---
+
+## 11. 추가 기능 개발 계획 (Phase 9~12)
+
+### 11.1 사용자 등급 체계 확장
+
+기존 5단계 등급을 7단계로 확장:
+
+| 등급 | 코드 | 조건 | 주요 권한 |
+|------|------|------|----------|
+| 게스트 | G | 미가입 | 공개 콘텐츠 열람 |
+| 회원 | U | 이메일 인증 | 일부 커뮤니티, 후원 |
+| 당원 | M | 입당 승인 + 당비 납부 | 전체 커뮤니티, 투표권, 활동 기록 |
+| 활동당원 | AM | 활동점수 100점↑ | 공천 신청, 운영위원 피선거권 |
+| 후보자 | C | 공천 신청 승인 | 공천 평가 대상 |
+| 운영자 | MOD | 임명/선출 | 지역/위원회 관리 |
+| 관리자 | ADM | 최고위 임명 | 시스템 전체 관리 |
+
+### 11.2 활동 추적 시스템
+
+#### 활동 유형 및 점수
+| 활동 유형 | 점수 | 설명 |
+|----------|------|------|
+| 게시글 작성 | 5점 | 커뮤니티 게시글 |
+| 댓글 작성 | 2점 | 게시글 댓글 |
+| 행사 참여 | 10점 | 오프라인 행사 (QR 체크인) |
+| 정책 제안 | 15점 | 정책 제안 작성 |
+| 투표 참여 | 5점 | 당내 투표 참여 |
+| 후원 | 별도 | 후원금액 비례 |
+
+#### 활동 영역
+- **지역 활동**: 소속 지역위원회 커뮤니티 활동
+- **위원회 활동**: 소속 상임위원회 커뮤니티 활동
+- **전국 활동**: 전국 단위 행사, 정책 투표
+
+### 11.3 공천 시스템
+
+#### 공천 프로세스
+1. **신청** → 2. **자격심사** → 3. **3축평가** → 4. **심의** → 5. **확정**
+
+#### 3축 평가 체계
+```
+최종점수 = (직접투표 × 0.4) + (지역활동 × 0.3) + (위원회활동 × 0.3)
+```
+
+| 평가 축 | 비중 | 평가 방법 |
+|--------|------|----------|
+| 직접 투표 | 40% | 당원 직접 투표 |
+| 지역 활동 점수 | 30% | 해당 지역 활동 이력 |
+| 위원회 활동 점수 | 30% | 소속 위원회 활동 이력 |
+
+### 11.4 투표 시스템
+
+#### 투표 유형
+| 유형 | 참여 자격 | 용도 |
+|------|----------|------|
+| 당원 투표 | 당원 이상 | 당 대표 선출, 정책 결정 |
+| 공천 투표 | 당원 이상 | 공천 후보 평가 |
+| 위원회 투표 | 해당 위원회 당원 | 위원회 내부 결정 |
+| 지역 투표 | 해당 지역 당원 | 지역위원회 결정 |
+
+#### 투표 절차
+1. **투표 공고** (숙의 기간 최소 7일)
+2. **숙의 기간** (토론 게시판)
+3. **투표 기간** (온라인 투표)
+4. **개표** (자동 개표 및 결과 발표)
+5. **이의 신청** (결과 이의 신청 기간)
+
+### 11.5 국제 멀티테넌시 시스템
+
+#### 테넌트 구조
+```
+국제연합 (happy-society.org)
+├── 한국 지부 (happysociety.kr)
+├── 일본 지부 (japan.happy-society.org)
+├── 미국 지부 (usa.happy-society.org)
+└── 기타 지부
+```
+
+#### 테넌트 격리
+- **공유 DB + tenant_id**: 행 레벨 격리
+- **RLS 정책**: Supabase RLS로 자동 격리
+- **도메인 매핑**: 커스텀 도메인 지원
+
+#### 국제 연대 모듈
+- 국제 게시판 (각국 지부 공유)
+- 국제 투표 (국제연합 의사결정)
+- 연대 활동 (국제 행사, 공동 성명)
+- 번역 시스템 (next-intl + AI 번역)
+
+---
+
+## 12. 추가 데이터베이스 스키마
+
+### 12.1 활동 기록 테이블
+```sql
+CREATE TABLE activities (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES user_profiles(id),
+  activity_type VARCHAR(50) NOT NULL,
+  points INTEGER NOT NULL,
+  scope VARCHAR(20) NOT NULL, -- 'national', 'regional', 'committee'
+  scope_id UUID,
+  reference_type VARCHAR(50),
+  reference_id UUID,
+  description TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+### 12.2 공천 테이블
+```sql
+CREATE TABLE nominations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES user_profiles(id),
+  election_type VARCHAR(50) NOT NULL,
+  region_id UUID REFERENCES regions(id),
+  status VARCHAR(20) DEFAULT 'pending',
+  application_text TEXT,
+  regional_score DECIMAL(5,2),
+  committee_score DECIMAL(5,2),
+  vote_score DECIMAL(5,2),
+  final_score DECIMAL(5,2),
+  reviewed_by UUID,
+  reviewed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+### 12.3 투표 테이블
+```sql
+CREATE TABLE votes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title VARCHAR(255) NOT NULL,
+  description TEXT,
+  vote_type VARCHAR(50) NOT NULL,
+  scope VARCHAR(20) NOT NULL,
+  scope_id UUID,
+  options JSONB NOT NULL,
+  start_date TIMESTAMPTZ NOT NULL,
+  end_date TIMESTAMPTZ NOT NULL,
+  deliberation_start TIMESTAMPTZ,
+  min_participation INTEGER DEFAULT 0,
+  status VARCHAR(20) DEFAULT 'draft',
+  result JSONB,
+  created_by UUID,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE vote_records (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  vote_id UUID REFERENCES votes(id),
+  user_id UUID REFERENCES user_profiles(id),
+  selected_options JSONB NOT NULL,
+  voted_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(vote_id, user_id)
+);
+```
+
+### 12.4 테넌트 테이블 (국제연합용)
+```sql
+CREATE TABLE tenants (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name VARCHAR(255) NOT NULL,
+  slug VARCHAR(100) UNIQUE NOT NULL,
+  domain VARCHAR(255),
+  logo_url TEXT,
+  primary_color VARCHAR(7) DEFAULT '#1F6F6B',
+  language VARCHAR(10) DEFAULT 'ko',
+  settings JSONB DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+---
+
 *작성일: 2026-01-14*
+*업데이트: 2026-02-01 (Phase 9~12 추가)*

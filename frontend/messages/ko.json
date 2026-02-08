@@ -1,0 +1,159 @@
+{
+  "common": {
+    "appName": "행복사회당",
+    "loading": "로딩 중...",
+    "error": "오류가 발생했습니다",
+    "save": "저장",
+    "cancel": "취소",
+    "confirm": "확인",
+    "delete": "삭제",
+    "edit": "수정",
+    "create": "생성",
+    "search": "검색",
+    "submit": "제출",
+    "back": "뒤로",
+    "next": "다음",
+    "previous": "이전",
+    "more": "더보기",
+    "close": "닫기",
+    "yes": "예",
+    "no": "아니오"
+  },
+  "nav": {
+    "home": "홈",
+    "about": "당 소개",
+    "policies": "정책",
+    "news": "소식",
+    "join": "입당",
+    "donate": "후원",
+    "community": "커뮤니티",
+    "portal": "회원 포털",
+    "login": "로그인",
+    "logout": "로그아웃",
+    "myPage": "마이페이지"
+  },
+  "home": {
+    "hero": {
+      "title": "모두가 행복한 사회를 위해",
+      "subtitle": "함께 만들어가는 대한민국의 미래",
+      "joinButton": "입당하기",
+      "learnMore": "더 알아보기"
+    },
+    "vision": {
+      "title": "우리의 비전",
+      "description": "경제적 평등, 사회적 연대, 지속가능한 발전을 통해 모든 시민이 행복한 삶을 누리는 사회를 만들어갑니다."
+    }
+  },
+  "auth": {
+    "login": "로그인",
+    "register": "회원가입",
+    "email": "이메일",
+    "password": "비밀번호",
+    "confirmPassword": "비밀번호 확인",
+    "forgotPassword": "비밀번호 찾기",
+    "resetPassword": "비밀번호 재설정",
+    "name": "이름",
+    "phone": "휴대폰 번호",
+    "verifyPhone": "휴대폰 인증",
+    "verifyEmail": "이메일 인증",
+    "loginWithGoogle": "Google로 로그인",
+    "loginWithKakao": "카카오로 로그인",
+    "noAccount": "계정이 없으신가요?",
+    "hasAccount": "이미 계정이 있으신가요?",
+    "agreeTerms": "이용약관에 동의합니다",
+    "agreePrivacy": "개인정보처리방침에 동의합니다"
+  },
+  "portal": {
+    "dashboard": "대시보드",
+    "profile": "프로필",
+    "activities": "활동 내역",
+    "notifications": "알림",
+    "payments": "당비 납부",
+    "proposals": "정책 제안",
+    "nominations": "공천 신청",
+    "activityScore": "활동 점수",
+    "memberSince": "입당일",
+    "role": "등급"
+  },
+  "community": {
+    "title": "커뮤니티",
+    "regional": "지역 커뮤니티",
+    "committee": "상임위원회",
+    "newPost": "새 글 작성",
+    "posts": "게시글",
+    "comments": "댓글",
+    "likes": "좋아요",
+    "views": "조회수",
+    "writeComment": "댓글을 입력하세요",
+    "noComments": "댓글이 없습니다"
+  },
+  "votes": {
+    "title": "투표",
+    "active": "진행 중",
+    "upcoming": "예정",
+    "completed": "완료",
+    "vote": "투표하기",
+    "result": "결과 보기",
+    "voted": "투표 완료",
+    "remainingTime": "남은 시간",
+    "participants": "참여자",
+    "objection": "이의 신청"
+  },
+  "nominations": {
+    "title": "공천 신청",
+    "apply": "공천 신청하기",
+    "eligibility": "자격 요건",
+    "status": "진행 상태",
+    "pending": "신청 대기",
+    "screening": "자격 심사 중",
+    "evaluation": "평가 중",
+    "review": "심의 중",
+    "approved": "승인",
+    "rejected": "반려"
+  },
+  "events": {
+    "title": "행사 일정",
+    "upcoming": "예정된 행사",
+    "past": "지난 행사",
+    "register": "참가 신청",
+    "registered": "신청 완료",
+    "attended": "참석 완료",
+    "location": "장소",
+    "online": "온라인",
+    "participants": "참가자"
+  },
+  "footer": {
+    "about": "소개",
+    "contact": "연락처",
+    "terms": "이용약관",
+    "privacy": "개인정보처리방침",
+    "copyright": "모든 권리 보유"
+  },
+  "intl": {
+    "board": {
+      "title": "국제 게시판",
+      "description": "전 세계 회원들과 소통하고 행복한 사회를 위한 아이디어를 공유하세요",
+      "writePost": "글쓰기",
+      "noPosts": "게시글이 없습니다",
+      "beFirst": "첫 번째 글을 작성해 보세요!",
+      "chapters": "지부",
+      "viewAllChapters": "모든 지부 보기",
+      "joinMovement": "함께하기",
+      "joinDescription": "회원이 되어 토론에 참여하고 전 세계 활동가들과 연결하세요."
+    },
+    "votes": {
+      "title": "국제 투표",
+      "description": "전 세계 지부와 함께 민주적 의사결정에 참여하세요",
+      "active": "진행 중",
+      "deliberation": "숙의",
+      "completed": "완료",
+      "castVote": "투표하기",
+      "alreadyVoted": "투표 완료!",
+      "yourSelection": "선택",
+      "results": "결과",
+      "discussion": "토론",
+      "shareThoughts": "이 투표에 대한 의견을 공유하세요...",
+      "noDiscussions": "토론이 없습니다. 첫 번째로 의견을 남겨보세요!"
+    }
+  }
+}

@@ -165,4 +165,126 @@
 
 ---
 
-*최종 업데이트: 2026-01-19*
+---
+
+## 10. 활동 추적 시스템 (Phase 9)
+
+| 항목 | 상태 | 비고 |
+|------|------|------|
+| activities 테이블 생성 | ✅ | Supabase migration |
+| 활동 유형 ENUM | ✅ | post, comment, event, policy, vote, donation |
+| RLS 정책 | ✅ | 본인 활동만 조회 |
+| 게시글 작성 활동 기록 | ✅ | +5점 (트리거) |
+| 댓글 작성 활동 기록 | ✅ | +2점 (트리거) |
+| 투표 참여 활동 기록 | ✅ | +5점 (RPC) |
+| 정책 제안 활동 기록 | ✅ | +15점 (트리거) |
+| 행사 참여 활동 기록 | ✅ | +10점 (check_in_event) |
+| 활동 점수 집계 RPC | ✅ | 지역별/위원회별 분리 |
+| 활동당원 자동 승급 | ✅ | 100점 이상 |
+| 활동 대시보드 | ✅ | /portal/activities |
+| 활동 통계 차트 | ✅ | 월별/유형별 |
+| 배지 시스템 | ✅ | 활동 레벨 표시 |
+
+---
+
+## 11. 투표 시스템 (Phase 10)
+
+| 항목 | 상태 | 비고 |
+|------|------|------|
+| votes 테이블 생성 | ✅ | 투표 정보 |
+| vote_records 테이블 생성 | ✅ | 투표 기록 |
+| 투표 유형 ENUM | ✅ | party, nomination, policy, committee, regional |
+| 투표 상태 ENUM | ✅ | draft, deliberation, voting, counting, completed |
+| RLS 정책 | ✅ | 당원 이상만 투표 |
+| 관리자 투표 목록 | ✅ | /admin/votes |
+| 투표 생성 폼 | ✅ | 옵션, 기간, 대상 설정 |
+| 숙의 기간 토론 게시판 | ✅ | vote_discussions 테이블 |
+| 투표 목록 페이지 | ✅ | /votes |
+| 투표 참여 페이지 | ✅ | /votes/[id] |
+| 이중 투표 방지 | ✅ | UNIQUE 제약 |
+| 자동 개표 함수 | ✅ | count_votes RPC |
+| 결과 시각화 | ✅ | 바 차트 |
+| 이의 신청 기능 | ✅ | vote_objections 테이블 + UI |
+
+---
+
+## 12. 공천 시스템 (Phase 11)
+
+| 항목 | 상태 | 비고 |
+|------|------|------|
+| nominations 테이블 생성 | ✅ | 공천 신청 정보 |
+| 공천 상태 ENUM | ✅ | pending, screening, evaluation, review, approved, rejected |
+| RLS 정책 | ✅ | 활동당원 이상 신청 |
+| 공천 신청 페이지 | ✅ | /portal/nominations |
+| 자격 요건 검증 | ✅ | check_nomination_eligibility RPC |
+| 지역 활동 점수 집계 | ✅ | calculate_nomination_scores RPC |
+| 위원회 활동 점수 집계 | ✅ | calculate_nomination_scores RPC |
+| 공천 투표 연동 | ✅ | nomination_vote_id FK |
+| 최종 점수 계산 | ✅ | 40:30:30 |
+| 관리자 공천 관리 | ✅ | /admin/nominations |
+| 자격 심사 처리 | ✅ | update_nomination_status RPC |
+| 최종 심의 기능 | ✅ | update_nomination_status RPC |
+| 공천 결과 발표 | ✅ | notifications 테이블 + 트리거 |
+| 후보자 등급 변경 | ✅ | apply_nomination에서 자동 |
+
+---
+
+## 13. 국제 멀티테넌시 (Phase 12)
+
+| 항목 | 상태 | 비고 |
+|------|------|------|
+| tenants 테이블 생성 | ✅ | tenant_members, tenant_settings 포함 |
+| tenant_id 컬럼 추가 | ✅ | 주요 테이블에 추가 완료 |
+| RLS 테넌트 격리 | ✅ | user_has_tenant_access 함수 |
+| 테넌트 관리 API | ✅ | TenantContext, useTenantData |
+| 테넌트 선택 UI | ✅ | TenantSelector 컴포넌트 |
+| 도메인 매핑 | ✅ | middleware.ts, domain-mapping.ts |
+| next-intl 설정 | ✅ | i18n 라우팅 설정 |
+| 한국어 번역 | ✅ | messages/ko.json |
+| 영어 번역 | ✅ | messages/en.json |
+| 일본어 번역 | ✅ | messages/ja.json |
+| 언어 전환 UI | ✅ | LanguageSwitcher 컴포넌트 |
+| 국제 포털 연동 | ✅ | happy-society-international 프로젝트 연동 |
+| 공유 타입/API | ✅ | international.ts, types/international.ts |
+| 국제 게시판 | ✅ | /intl/board, intl_posts 테이블 |
+| 국제 투표 | ✅ | /intl/votes, intl_votes 테이블 |
+
+---
+
+## 14. 고도화 (Phase 13)
+
+| 항목 | 상태 | 비고 |
+|------|------|------|
+| PWA 설정 | ✅ | manifest.json, sw.js, usePWA 훅 |
+| 오프라인 지원 | ✅ | IndexedDB 캐싱, 오프라인 체크인 |
+| 푸시 알림 | ✅ | Web Push, VAPID 지원 |
+| 행사 QR 체크인 | ✅ | QRScanner, 오프라인 동기화 |
+| 분석 대시보드 | ✅ | /admin/analytics 페이지 |
+| AI 정책 요약 | ✅ | OpenAI 연동, PolicySummary 컴포넌트 |
+| 콘텐츠 추천 | ✅ | ContentRecommendations 컴포넌트 |
+
+---
+
+## 진행률 요약 (업데이트)
+
+| Phase | 완료 | 전체 | 진행률 |
+|-------|------|------|--------|
+| 1. 프로젝트 셋업 | 9 | 9 | 100% |
+| 2. 디자인 시스템 | 10 | 10 | 100% |
+| 3. 공개 웹사이트 | 12 | 12 | 100% |
+| 4. 회원 인증 | 8 | 8 | 100% |
+| 5. 회원 포털 | 5 | 5 | 100% |
+| 6. 커뮤니티 | 9 | 9 | 100% |
+| 7. 관리자 | 6 | 6 | 100% |
+| 8. 백엔드 API | 10 | 10 | 100% |
+| 9. 테스트 & 배포 | 8 | 8 | 100% |
+| 10. 활동 추적 | 13 | 13 | 100% |
+| 11. 투표 시스템 | 14 | 14 | 100% |
+| 12. 공천 시스템 | 14 | 14 | 100% |
+| 13. 국제 멀티테넌시 | 15 | 15 | 100% |
+| 14. 고도화 | 7 | 7 | 100% |
+| **전체** | **140** | **140** | **100%** |
+
+---
+
+*최종 업데이트: 2026-02-03 (전체 프로젝트 100% 완료 - 도메인 매핑 추가)*

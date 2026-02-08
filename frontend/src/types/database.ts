@@ -528,6 +528,10 @@ export type Database = {
           region_id: string | null
           role: Database["public"]["Enums"]["user_role"] | null
           updated_at: string | null
+          activity_score: number | null
+          regional_activity_score: number | null
+          committee_activity_score: number | null
+          last_activity_at: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -544,6 +548,10 @@ export type Database = {
           region_id?: string | null
           role?: Database["public"]["Enums"]["user_role"] | null
           updated_at?: string | null
+          activity_score?: number | null
+          regional_activity_score?: number | null
+          committee_activity_score?: number | null
+          last_activity_at?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -560,6 +568,10 @@ export type Database = {
           region_id?: string | null
           role?: Database["public"]["Enums"]["user_role"] | null
           updated_at?: string | null
+          activity_score?: number | null
+          regional_activity_score?: number | null
+          committee_activity_score?: number | null
+          last_activity_at?: string | null
         }
         Relationships: [
           {
@@ -570,6 +582,468 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      activities: {
+        Row: {
+          id: string
+          user_id: string
+          activity_type: Database["public"]["Enums"]["activity_type"]
+          points: number
+          scope: Database["public"]["Enums"]["activity_scope"]
+          scope_id: string | null
+          reference_type: string | null
+          reference_id: string | null
+          description: string | null
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          activity_type: Database["public"]["Enums"]["activity_type"]
+          points?: number
+          scope?: Database["public"]["Enums"]["activity_scope"]
+          scope_id?: string | null
+          reference_type?: string | null
+          reference_id?: string | null
+          description?: string | null
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          activity_type?: Database["public"]["Enums"]["activity_type"]
+          points?: number
+          scope?: Database["public"]["Enums"]["activity_scope"]
+          scope_id?: string | null
+          reference_type?: string | null
+          reference_id?: string | null
+          description?: string | null
+          created_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activities_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      votes: {
+        Row: {
+          id: string
+          title: string
+          description: string | null
+          vote_type: Database["public"]["Enums"]["vote_type"]
+          scope: Database["public"]["Enums"]["vote_scope"]
+          scope_id: string | null
+          options: Json
+          allow_multiple: boolean | null
+          max_selections: number | null
+          start_date: string
+          end_date: string
+          deliberation_start: string | null
+          min_participation: number | null
+          status: Database["public"]["Enums"]["vote_status"] | null
+          result: Json | null
+          total_votes: number | null
+          created_by: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          title: string
+          description?: string | null
+          vote_type: Database["public"]["Enums"]["vote_type"]
+          scope?: Database["public"]["Enums"]["vote_scope"]
+          scope_id?: string | null
+          options?: Json
+          allow_multiple?: boolean | null
+          max_selections?: number | null
+          start_date: string
+          end_date: string
+          deliberation_start?: string | null
+          min_participation?: number | null
+          status?: Database["public"]["Enums"]["vote_status"] | null
+          result?: Json | null
+          total_votes?: number | null
+          created_by?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          title?: string
+          description?: string | null
+          vote_type?: Database["public"]["Enums"]["vote_type"]
+          scope?: Database["public"]["Enums"]["vote_scope"]
+          scope_id?: string | null
+          options?: Json
+          allow_multiple?: boolean | null
+          max_selections?: number | null
+          start_date?: string
+          end_date?: string
+          deliberation_start?: string | null
+          min_participation?: number | null
+          status?: Database["public"]["Enums"]["vote_status"] | null
+          result?: Json | null
+          total_votes?: number | null
+          created_by?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "votes_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vote_records: {
+        Row: {
+          id: string
+          vote_id: string
+          user_id: string
+          selected_options: Json
+          voted_at: string | null
+        }
+        Insert: {
+          id?: string
+          vote_id: string
+          user_id: string
+          selected_options: Json
+          voted_at?: string | null
+        }
+        Update: {
+          id?: string
+          vote_id?: string
+          user_id?: string
+          selected_options?: Json
+          voted_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vote_records_vote_id_fkey"
+            columns: ["vote_id"]
+            isOneToOne: false
+            referencedRelation: "votes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vote_records_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nominations: {
+        Row: {
+          id: string
+          user_id: string
+          election_type: Database["public"]["Enums"]["election_type"]
+          region_id: string | null
+          constituency: string | null
+          status: Database["public"]["Enums"]["nomination_status"] | null
+          application_text: string | null
+          career_summary: string | null
+          policy_pledges: string | null
+          regional_activity_score: number | null
+          committee_activity_score: number | null
+          direct_vote_score: number | null
+          final_score: number | null
+          nomination_vote_id: string | null
+          screening_note: string | null
+          review_note: string | null
+          reviewed_by: string | null
+          reviewed_at: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          election_type: Database["public"]["Enums"]["election_type"]
+          region_id?: string | null
+          constituency?: string | null
+          status?: Database["public"]["Enums"]["nomination_status"] | null
+          application_text?: string | null
+          career_summary?: string | null
+          policy_pledges?: string | null
+          regional_activity_score?: number | null
+          committee_activity_score?: number | null
+          direct_vote_score?: number | null
+          final_score?: number | null
+          nomination_vote_id?: string | null
+          screening_note?: string | null
+          review_note?: string | null
+          reviewed_by?: string | null
+          reviewed_at?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          election_type?: Database["public"]["Enums"]["election_type"]
+          region_id?: string | null
+          constituency?: string | null
+          status?: Database["public"]["Enums"]["nomination_status"] | null
+          application_text?: string | null
+          career_summary?: string | null
+          policy_pledges?: string | null
+          regional_activity_score?: number | null
+          committee_activity_score?: number | null
+          direct_vote_score?: number | null
+          final_score?: number | null
+          nomination_vote_id?: string | null
+          screening_note?: string | null
+          review_note?: string | null
+          reviewed_by?: string | null
+          reviewed_at?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nominations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "nominations_region_id_fkey"
+            columns: ["region_id"]
+            isOneToOne: false
+            referencedRelation: "regions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "nominations_nomination_vote_id_fkey"
+            columns: ["nomination_vote_id"]
+            isOneToOne: false
+            referencedRelation: "votes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "nominations_reviewed_by_fkey"
+            columns: ["reviewed_by"]
+            isOneToOne: false
+            referencedRelation: "user_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      policy_proposals: {
+        Row: {
+          id: string
+          user_id: string
+          title: string
+          content: string
+          category: string | null
+          status: string
+          reviewed_by: string | null
+          reviewed_at: string | null
+          admin_note: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          title: string
+          content: string
+          category?: string | null
+          status?: string
+          reviewed_by?: string | null
+          reviewed_at?: string | null
+          admin_note?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          title?: string
+          content?: string
+          category?: string | null
+          status?: string
+          reviewed_by?: string | null
+          reviewed_at?: string | null
+          admin_note?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      events: {
+        Row: {
+          id: string
+          title: string
+          description: string | null
+          event_type: string
+          location: string | null
+          online_url: string | null
+          start_date: string
+          end_date: string
+          max_participants: number | null
+          current_participants: number
+          scope: Database["public"]["Enums"]["activity_scope"]
+          scope_id: string | null
+          status: string
+          created_by: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          title: string
+          description?: string | null
+          event_type: string
+          location?: string | null
+          online_url?: string | null
+          start_date: string
+          end_date: string
+          max_participants?: number | null
+          current_participants?: number
+          scope?: Database["public"]["Enums"]["activity_scope"]
+          scope_id?: string | null
+          status?: string
+          created_by?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          title?: string
+          description?: string | null
+          event_type?: string
+          location?: string | null
+          online_url?: string | null
+          start_date?: string
+          end_date?: string
+          max_participants?: number | null
+          current_participants?: number
+          scope?: Database["public"]["Enums"]["activity_scope"]
+          scope_id?: string | null
+          status?: string
+          created_by?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      event_participants: {
+        Row: {
+          id: string
+          event_id: string
+          user_id: string
+          registered_at: string | null
+          attended_at: string | null
+          check_in_method: string | null
+        }
+        Insert: {
+          id?: string
+          event_id: string
+          user_id: string
+          registered_at?: string | null
+          attended_at?: string | null
+          check_in_method?: string | null
+        }
+        Update: {
+          id?: string
+          event_id?: string
+          user_id?: string
+          registered_at?: string | null
+          attended_at?: string | null
+          check_in_method?: string | null
+        }
+        Relationships: []
+      }
+      vote_objections: {
+        Row: {
+          id: string
+          vote_id: string
+          user_id: string
+          reason: string
+          evidence: string | null
+          status: string
+          admin_response: string | null
+          reviewed_by: string | null
+          reviewed_at: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          id?: string
+          vote_id: string
+          user_id: string
+          reason: string
+          evidence?: string | null
+          status?: string
+          admin_response?: string | null
+          reviewed_by?: string | null
+          reviewed_at?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          id?: string
+          vote_id?: string
+          user_id?: string
+          reason?: string
+          evidence?: string | null
+          status?: string
+          admin_response?: string | null
+          reviewed_by?: string | null
+          reviewed_at?: string | null
+          created_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          id: string
+          user_id: string
+          type: string
+          title: string
+          message: string | null
+          link: string | null
+          is_read: boolean
+          metadata: Json
+          created_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          type: string
+          title: string
+          message?: string | null
+          link?: string | null
+          is_read?: boolean
+          metadata?: Json
+          created_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          type?: string
+          title?: string
+          message?: string | null
+          link?: string | null
+          is_read?: boolean
+          metadata?: Json
+          created_at?: string | null
+        }
+        Relationships: []
       }
       site_settings: {
         Row: {
@@ -654,6 +1128,123 @@ export type Database = {
         }
         Relationships: []
       }
+      tenants: {
+        Row: {
+          id: string
+          slug: string
+          name: string
+          country_code: string
+          default_language: string
+          supported_languages: string[]
+          logo_url: string | null
+          favicon_url: string | null
+          primary_color: string
+          secondary_color: string
+          custom_domain: string | null
+          settings: Json
+          features: Json
+          status: string
+          is_headquarters: boolean
+          contact_email: string | null
+          admin_user_id: string | null
+          founded_at: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          slug: string
+          name: string
+          country_code: string
+          default_language?: string
+          supported_languages?: string[]
+          logo_url?: string | null
+          favicon_url?: string | null
+          primary_color?: string
+          secondary_color?: string
+          custom_domain?: string | null
+          settings?: Json
+          features?: Json
+          status?: string
+          is_headquarters?: boolean
+          contact_email?: string | null
+          admin_user_id?: string | null
+          founded_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          slug?: string
+          name?: string
+          country_code?: string
+          default_language?: string
+          supported_languages?: string[]
+          logo_url?: string | null
+          favicon_url?: string | null
+          primary_color?: string
+          secondary_color?: string
+          custom_domain?: string | null
+          settings?: Json
+          features?: Json
+          status?: string
+          is_headquarters?: boolean
+          contact_email?: string | null
+          admin_user_id?: string | null
+          founded_at?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      tenant_members: {
+        Row: {
+          id: string
+          tenant_id: string
+          user_id: string
+          role: string
+          joined_at: string
+        }
+        Insert: {
+          id?: string
+          tenant_id: string
+          user_id: string
+          role?: string
+          joined_at?: string
+        }
+        Update: {
+          id?: string
+          tenant_id?: string
+          user_id?: string
+          role?: string
+          joined_at?: string
+        }
+        Relationships: []
+      }
+      tenant_settings: {
+        Row: {
+          id: string
+          tenant_id: string
+          key: string
+          value: Json
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          tenant_id: string
+          key: string
+          value: Json
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          tenant_id?: string
+          key?: string
+          value?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -678,6 +1269,155 @@ export type Database = {
         Args: { p_phone: string; p_code: string }
         Returns: boolean
       }
+      record_activity: {
+        Args: {
+          p_user_id: string
+          p_activity_type: Database["public"]["Enums"]["activity_type"]
+          p_points: number
+          p_scope?: Database["public"]["Enums"]["activity_scope"]
+          p_scope_id?: string
+          p_reference_type?: string
+          p_reference_id?: string
+          p_description?: string
+        }
+        Returns: string
+      }
+      get_activity_stats: {
+        Args: { p_user_id: string }
+        Returns: Json
+      }
+      get_monthly_activities: {
+        Args: {
+          p_user_id: string
+          p_year?: number
+          p_month?: number
+        }
+        Returns: {
+          id: string
+          activity_type: Database["public"]["Enums"]["activity_type"]
+          points: number
+          scope: Database["public"]["Enums"]["activity_scope"]
+          description: string
+          created_at: string
+        }[]
+      }
+      calculate_user_activity_score: {
+        Args: { p_user_id: string }
+        Returns: {
+          total_score: number
+          regional_score: number
+          committee_score: number
+        }[]
+      }
+      check_vote_eligibility: {
+        Args: { p_vote_id: string; p_user_id: string }
+        Returns: boolean
+      }
+      cast_vote: {
+        Args: { p_vote_id: string; p_user_id: string; p_selected_options: Json }
+        Returns: Json
+      }
+      count_votes: {
+        Args: { p_vote_id: string }
+        Returns: Json
+      }
+      get_available_votes: {
+        Args: { p_user_id: string }
+        Returns: {
+          id: string
+          title: string
+          description: string
+          vote_type: Database["public"]["Enums"]["vote_type"]
+          scope: Database["public"]["Enums"]["vote_scope"]
+          status: Database["public"]["Enums"]["vote_status"]
+          start_date: string
+          end_date: string
+          total_votes: number
+          has_voted: boolean
+        }[]
+      }
+      update_vote_status: {
+        Args: { p_vote_id: string; p_new_status: Database["public"]["Enums"]["vote_status"] }
+        Returns: Json
+      }
+      check_nomination_eligibility: {
+        Args: { p_user_id: string }
+        Returns: Json
+      }
+      apply_nomination: {
+        Args: {
+          p_user_id: string
+          p_election_type: Database["public"]["Enums"]["election_type"]
+          p_region_id: string | null
+          p_constituency: string | null
+          p_application_text: string
+          p_career_summary: string
+          p_policy_pledges: string
+        }
+        Returns: Json
+      }
+      calculate_nomination_scores: {
+        Args: { p_nomination_id: string }
+        Returns: Json
+      }
+      update_nomination_status: {
+        Args: {
+          p_nomination_id: string
+          p_new_status: Database["public"]["Enums"]["nomination_status"]
+          p_note?: string | null
+          p_reviewer_id?: string | null
+        }
+        Returns: Json
+      }
+      get_nomination_candidates: {
+        Args: {
+          p_election_type?: Database["public"]["Enums"]["election_type"] | null
+          p_region_id?: string | null
+          p_status?: Database["public"]["Enums"]["nomination_status"] | null
+        }
+        Returns: {
+          id: string
+          user_id: string
+          user_name: string
+          election_type: Database["public"]["Enums"]["election_type"]
+          region_name: string
+          constituency: string
+          status: Database["public"]["Enums"]["nomination_status"]
+          final_score: number
+          created_at: string
+        }[]
+      }
+      register_for_event: {
+        Args: { p_event_id: string; p_user_id: string }
+        Returns: Json
+      }
+      check_in_event: {
+        Args: { p_event_id: string; p_user_id: string; p_check_in_method?: string }
+        Returns: Json
+      }
+      submit_vote_objection: {
+        Args: { p_vote_id: string; p_user_id: string; p_reason: string; p_evidence?: string | null }
+        Returns: Json
+      }
+      send_notification: {
+        Args: {
+          p_user_id: string
+          p_type: string
+          p_title: string
+          p_message?: string | null
+          p_link?: string | null
+          p_metadata?: Json
+        }
+        Returns: string
+      }
+      get_unread_notification_count: {
+        Args: { p_user_id: string }
+        Returns: number
+      }
+      mark_notifications_read: {
+        Args: { p_user_id: string; p_notification_ids?: string[] | null }
+        Returns: number
+      }
     }
     Enums: {
       community_type: "region" | "committee"
@@ -690,7 +1430,14 @@ export type Database = {
       payment_type: "monthly" | "yearly"
       report_status: "pending" | "reviewing" | "resolved" | "dismissed"
       report_target_type: "post" | "comment" | "user"
-      user_role: "guest" | "user" | "member" | "moderator" | "admin"
+      user_role: "guest" | "user" | "member" | "active_member" | "candidate" | "moderator" | "admin"
+      activity_type: "post_create" | "comment_create" | "event_attend" | "policy_propose" | "vote_participate" | "donation"
+      activity_scope: "national" | "regional" | "committee"
+      vote_type: "party_election" | "nomination" | "policy" | "committee" | "regional"
+      vote_scope: "national" | "regional" | "committee" | "international"
+      vote_status: "draft" | "deliberation" | "voting" | "counting" | "completed" | "cancelled"
+      nomination_status: "pending" | "screening" | "evaluation" | "review" | "approved" | "rejected"
+      election_type: "national_assembly" | "local_council" | "local_executive" | "party_representative" | "supreme_council"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -818,3 +1565,17 @@ export type ReportStatus = Enums<'report_status'>
 export type ReportTargetType = Enums<'report_target_type'>
 export type SiteSettings = Tables<'site_settings'>
 export type News = Tables<'news'>
+export type Activity = Tables<'activities'>
+export type ActivityType = Enums<'activity_type'>
+export type ActivityScope = Enums<'activity_scope'>
+export type Vote = Tables<'votes'>
+export type VoteRecord = Tables<'vote_records'>
+export type VoteType = Enums<'vote_type'>
+export type VoteScope = Enums<'vote_scope'>
+export type VoteStatus = Enums<'vote_status'>
+export type NominationStatus = Enums<'nomination_status'>
+export type ElectionType = Enums<'election_type'>
+export type Nomination = Tables<'nominations'>
+export type Tenant = Tables<'tenants'>
+export type TenantMember = Tables<'tenant_members'>
+export type TenantSetting = Tables<'tenant_settings'>

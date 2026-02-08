@@ -1,0 +1,159 @@
+{
+  "common": {
+    "appName": "Happy Society Party",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "more": "More",
+    "close": "Close",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About Us",
+    "policies": "Policies",
+    "news": "News",
+    "join": "Join",
+    "donate": "Donate",
+    "community": "Community",
+    "portal": "Member Portal",
+    "login": "Login",
+    "logout": "Logout",
+    "myPage": "My Page"
+  },
+  "home": {
+    "hero": {
+      "title": "For a Society Where Everyone is Happy",
+      "subtitle": "Building the Future Together",
+      "joinButton": "Join Us",
+      "learnMore": "Learn More"
+    },
+    "vision": {
+      "title": "Our Vision",
+      "description": "We are building a society where all citizens can live happy lives through economic equality, social solidarity, and sustainable development."
+    }
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password",
+    "resetPassword": "Reset Password",
+    "name": "Name",
+    "phone": "Phone Number",
+    "verifyPhone": "Verify Phone",
+    "verifyEmail": "Verify Email",
+    "loginWithGoogle": "Login with Google",
+    "loginWithKakao": "Login with Kakao",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "agreeTerms": "I agree to the Terms of Service",
+    "agreePrivacy": "I agree to the Privacy Policy"
+  },
+  "portal": {
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "activities": "Activities",
+    "notifications": "Notifications",
+    "payments": "Membership Fees",
+    "proposals": "Policy Proposals",
+    "nominations": "Nomination Application",
+    "activityScore": "Activity Score",
+    "memberSince": "Member Since",
+    "role": "Role"
+  },
+  "community": {
+    "title": "Community",
+    "regional": "Regional Community",
+    "committee": "Standing Committee",
+    "newPost": "New Post",
+    "posts": "Posts",
+    "comments": "Comments",
+    "likes": "Likes",
+    "views": "Views",
+    "writeComment": "Write a comment",
+    "noComments": "No comments yet"
+  },
+  "votes": {
+    "title": "Voting",
+    "active": "Active",
+    "upcoming": "Upcoming",
+    "completed": "Completed",
+    "vote": "Vote",
+    "result": "View Results",
+    "voted": "Voted",
+    "remainingTime": "Time Remaining",
+    "participants": "Participants",
+    "objection": "File Objection"
+  },
+  "nominations": {
+    "title": "Nomination Application",
+    "apply": "Apply for Nomination",
+    "eligibility": "Eligibility Requirements",
+    "status": "Status",
+    "pending": "Pending",
+    "screening": "Under Screening",
+    "evaluation": "Under Evaluation",
+    "review": "Under Review",
+    "approved": "Approved",
+    "rejected": "Rejected"
+  },
+  "events": {
+    "title": "Events",
+    "upcoming": "Upcoming Events",
+    "past": "Past Events",
+    "register": "Register",
+    "registered": "Registered",
+    "attended": "Attended",
+    "location": "Location",
+    "online": "Online",
+    "participants": "Participants"
+  },
+  "footer": {
+    "about": "About",
+    "contact": "Contact",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "copyright": "All rights reserved"
+  },
+  "intl": {
+    "board": {
+      "title": "International Board",
+      "description": "Connect with members worldwide and share ideas for a happier society",
+      "writePost": "Write Post",
+      "noPosts": "No posts yet",
+      "beFirst": "Be the first to share your thoughts with the global community!",
+      "chapters": "Chapters",
+      "viewAllChapters": "View all chapters",
+      "joinMovement": "Join the Movement",
+      "joinDescription": "Become a member to participate in discussions and connect with activists worldwide."
+    },
+    "votes": {
+      "title": "International Voting",
+      "description": "Participate in democratic decision-making across our global chapters",
+      "active": "Active",
+      "deliberation": "Deliberation",
+      "completed": "Completed",
+      "castVote": "Cast Your Vote",
+      "alreadyVoted": "You have voted!",
+      "yourSelection": "Your selection",
+      "results": "Results",
+      "discussion": "Discussion",
+      "shareThoughts": "Share your thoughts on this vote...",
+      "noDiscussions": "No discussions yet. Be the first to share your thoughts!"
+    }
+  }
+}

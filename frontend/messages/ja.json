@@ -1,0 +1,159 @@
+{
+  "common": {
+    "appName": "幸福社会党",
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "delete": "削除",
+    "edit": "編集",
+    "create": "作成",
+    "search": "検索",
+    "submit": "送信",
+    "back": "戻る",
+    "next": "次へ",
+    "previous": "前へ",
+    "more": "もっと見る",
+    "close": "閉じる",
+    "yes": "はい",
+    "no": "いいえ"
+  },
+  "nav": {
+    "home": "ホーム",
+    "about": "党について",
+    "policies": "政策",
+    "news": "ニュース",
+    "join": "入党",
+    "donate": "寄付",
+    "community": "コミュニティ",
+    "portal": "会員ポータル",
+    "login": "ログイン",
+    "logout": "ログアウト",
+    "myPage": "マイページ"
+  },
+  "home": {
+    "hero": {
+      "title": "みんなが幸せな社会のために",
+      "subtitle": "共に創る未来",
+      "joinButton": "入党する",
+      "learnMore": "詳しく見る"
+    },
+    "vision": {
+      "title": "私たちのビジョン",
+      "description": "経済的平等、社会的連帯、持続可能な発展を通じて、すべての市民が幸せな生活を送れる社会を築いています。"
+    }
+  },
+  "auth": {
+    "login": "ログイン",
+    "register": "会員登録",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "confirmPassword": "パスワード確認",
+    "forgotPassword": "パスワードを忘れた",
+    "resetPassword": "パスワードリセット",
+    "name": "名前",
+    "phone": "電話番号",
+    "verifyPhone": "電話認証",
+    "verifyEmail": "メール認証",
+    "loginWithGoogle": "Googleでログイン",
+    "loginWithKakao": "カカオでログイン",
+    "noAccount": "アカウントをお持ちでないですか？",
+    "hasAccount": "すでにアカウントをお持ちですか？",
+    "agreeTerms": "利用規約に同意します",
+    "agreePrivacy": "プライバシーポリシーに同意します"
+  },
+  "portal": {
+    "dashboard": "ダッシュボード",
+    "profile": "プロフィール",
+    "activities": "活動履歴",
+    "notifications": "お知らせ",
+    "payments": "党費納付",
+    "proposals": "政策提案",
+    "nominations": "公認申請",
+    "activityScore": "活動スコア",
+    "memberSince": "入党日",
+    "role": "ランク"
+  },
+  "community": {
+    "title": "コミュニティ",
+    "regional": "地域コミュニティ",
+    "committee": "常任委員会",
+    "newPost": "新規投稿",
+    "posts": "投稿",
+    "comments": "コメント",
+    "likes": "いいね",
+    "views": "閲覧数",
+    "writeComment": "コメントを入力",
+    "noComments": "コメントはありません"
+  },
+  "votes": {
+    "title": "投票",
+    "active": "進行中",
+    "upcoming": "予定",
+    "completed": "完了",
+    "vote": "投票する",
+    "result": "結果を見る",
+    "voted": "投票済み",
+    "remainingTime": "残り時間",
+    "participants": "参加者",
+    "objection": "異議申立"
+  },
+  "nominations": {
+    "title": "公認申請",
+    "apply": "公認申請する",
+    "eligibility": "資格要件",
+    "status": "進行状況",
+    "pending": "申請待ち",
+    "screening": "資格審査中",
+    "evaluation": "評価中",
+    "review": "審議中",
+    "approved": "承認",
+    "rejected": "却下"
+  },
+  "events": {
+    "title": "イベント",
+    "upcoming": "予定のイベント",
+    "past": "過去のイベント",
+    "register": "参加申請",
+    "registered": "申請済み",
+    "attended": "参加済み",
+    "location": "場所",
+    "online": "オンライン",
+    "participants": "参加者"
+  },
+  "footer": {
+    "about": "概要",
+    "contact": "お問い合わせ",
+    "terms": "利用規約",
+    "privacy": "プライバシーポリシー",
+    "copyright": "全著作権所有"
+  },
+  "intl": {
+    "board": {
+      "title": "国際掲示板",
+      "description": "世界中のメンバーと交流し、幸せな社会のためのアイデアを共有しましょう",
+      "writePost": "投稿する",
+      "noPosts": "投稿がありません",
+      "beFirst": "最初の投稿を書いてみましょう！",
+      "chapters": "支部",
+      "viewAllChapters": "すべての支部を見る",
+      "joinMovement": "参加する",
+      "joinDescription": "メンバーになって議論に参加し、世界中の活動家とつながりましょう。"
+    },
+    "votes": {
+      "title": "国際投票",
+      "description": "世界中の支部と民主的な意思決定に参加しましょう",
+      "active": "進行中",
+      "deliberation": "審議",
+      "completed": "完了",
+      "castVote": "投票する",
+      "alreadyVoted": "投票済み！",
+      "yourSelection": "選択",
+      "results": "結果",
+      "discussion": "議論",
+      "shareThoughts": "この投票についてのご意見を共有してください...",
+      "noDiscussions": "まだ議論がありません。最初のコメントを残してください！"
+    }
+  }
+}

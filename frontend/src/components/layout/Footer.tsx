@@ -1,31 +1,36 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
-
-const footerLinks = {
-  당소개: [
-    { name: '비전과 가치', href: '/about/vision' },
-    { name: '역사', href: '/about/history' },
-    { name: '조직도', href: '/about/organization' },
-    { name: '당헌당규', href: '/about/constitution' },
-  ],
-  정책: [
-    { name: '경제정책', href: '/policies?category=economy' },
-    { name: '사회정책', href: '/policies?category=social' },
-    { name: '환경정책', href: '/policies?category=environment' },
-  ],
-  소식: [
-    { name: '보도자료', href: '/news/press' },
-    { name: '성명서', href: '/news/statements' },
-    { name: '일정', href: '/news/schedule' },
-  ],
-  참여: [
-    { name: '입당 안내', href: '/join' },
-    { name: '후원 안내', href: '/donate' },
-    { name: '커뮤니티', href: '/community' },
-  ],
-};
+import { useTranslations } from 'next-intl';
 
 export function Footer() {
+  const t = useTranslations();
+
+  const footerLinks = {
+    [t('nav.about')]: [
+      { name: '비전과 가치', href: '/about/vision' },
+      { name: '역사', href: '/about/history' },
+      { name: '조직도', href: '/about/organization' },
+      { name: '당헌당규', href: '/about/constitution' },
+    ],
+    [t('nav.policies')]: [
+      { name: '경제정책', href: '/policies?category=economy' },
+      { name: '사회정책', href: '/policies?category=social' },
+      { name: '환경정책', href: '/policies?category=environment' },
+    ],
+    [t('nav.news')]: [
+      { name: '보도자료', href: '/news/press' },
+      { name: '성명서', href: '/news/statements' },
+      { name: '일정', href: '/news/schedule' },
+    ],
+    '참여': [
+      { name: t('nav.join'), href: '/join' },
+      { name: t('nav.donate'), href: '/donate' },
+      { name: t('nav.community'), href: '/community' },
+    ],
+  };
+
   return (
     <footer className="bg-[var(--gray-900)] text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -35,12 +40,12 @@ export function Footer() {
             <Link href="/" className="flex items-center space-x-2 mb-4">
               <Image
                 src="/images/logo.svg"
-                alt="행복사회당 로고"
+                alt={t('common.appName')}
                 width={40}
                 height={40}
                 className="w-10 h-10"
               />
-              <span className="font-bold text-xl">행복사회당</span>
+              <span className="font-bold text-xl">{t('common.appName')}</span>
             </Link>
             <p className="text-[var(--gray-400)] text-sm">
               모든 국민의 행복을 위한<br />
@@ -116,10 +121,10 @@ export function Footer() {
 
         {/* Copyright */}
         <div className="mt-8 pt-8 border-t border-[var(--gray-700)] text-center text-[var(--gray-500)] text-sm">
-          <p>&copy; {new Date().getFullYear()} 행복사회당. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} {t('common.appName')}. {t('footer.copyright')}</p>
           <div className="mt-2 space-x-4">
-            <Link href="/privacy" className="hover:text-white transition-colors">개인정보처리방침</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">이용약관</Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">{t('footer.privacy')}</Link>
+            <Link href="/terms" className="hover:text-white transition-colors">{t('footer.terms')}</Link>
           </div>
         </div>
       </div>
