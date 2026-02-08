@@ -39,16 +39,24 @@ export function Header() {
       ],
     },
     {
+      name: '당원활동',
+      href: '/portal',
+      children: [
+        { name: '당원 포털', href: '/portal' },
+        { name: '투표', href: '/votes' },
+        { name: '행사', href: '/events' },
+        { name: '공천신청', href: '/portal/nominations' },
+        { name: '정책제안', href: '/portal/proposals' },
+      ],
+    },
+    {
       name: '참여',
       href: '/participate',
       children: [
         { name: t('nav.join'), href: '/join' },
         { name: t('nav.donate'), href: '/donate' },
+        { name: t('nav.community'), href: '/community' },
       ],
-    },
-    {
-      name: t('nav.community'),
-      href: '/community',
     },
   ];
 

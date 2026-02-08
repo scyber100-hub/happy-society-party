@@ -19,10 +19,12 @@ export function Footer() {
       { name: '사회정책', href: '/policies?category=social' },
       { name: '환경정책', href: '/policies?category=environment' },
     ],
-    [t('nav.news')]: [
-      { name: '보도자료', href: '/news/press' },
-      { name: '성명서', href: '/news/statements' },
-      { name: '일정', href: '/news/schedule' },
+    '당원활동': [
+      { name: '당원 포털', href: '/portal' },
+      { name: '투표', href: '/votes' },
+      { name: '행사', href: '/events' },
+      { name: '공천신청', href: '/portal/nominations' },
+      { name: '정책제안', href: '/portal/proposals' },
     ],
     '참여': [
       { name: t('nav.join'), href: '/join' },
