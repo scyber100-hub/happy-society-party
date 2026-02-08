@@ -81,7 +81,7 @@ export default function PolicyProposalsPage() {
     const init = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        router.push('/login?redirect=/portal/proposals');
+        router.push('/auth/login?redirect=/portal/proposals');
         return;
       }
       setUserId(user.id);

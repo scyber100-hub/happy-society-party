@@ -58,7 +58,7 @@ export default function NominationsPage() {
       if (user) {
         setUserId(user.id);
       } else {
-        router.push('/login?redirect=/portal/nominations');
+        router.push('/auth/login?redirect=/portal/nominations');
       }
     };
     getUser();
