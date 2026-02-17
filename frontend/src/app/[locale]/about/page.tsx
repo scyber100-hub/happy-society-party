@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Card } from '@/components/ui/Card';
-import { Eye, History, Building2, FileText, Target } from 'lucide-react';
+import { Eye, History, Building2, FileText, Target, Music } from 'lucide-react';
 
 const sections = [
   {
@@ -37,6 +37,13 @@ const sections = [
     href: '/about/constitution',
     icon: FileText,
     color: 'bg-red-100 text-red-600',
+  },
+  {
+    title: '국제연대가',
+    description: '만국의 시민들이여, 연대하라 - 행복사회당 국제연대가',
+    href: '/about/anthem',
+    icon: Music,
+    color: 'bg-teal-100 text-teal-600',
   },
 ];
 

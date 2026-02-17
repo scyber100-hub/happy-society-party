@@ -13,6 +13,7 @@ export function Footer() {
       { name: '역사', href: '/about/history' },
       { name: '조직도', href: '/about/organization' },
       { name: '당헌당규', href: '/about/constitution' },
+      { name: '국제연대가', href: '/about/anthem' },
     ],
     [t('nav.policies')]: [
       { name: '경제정책', href: '/policies?category=economy' },
@@ -30,6 +31,12 @@ export function Footer() {
       { name: t('nav.join'), href: '/join' },
       { name: t('nav.donate'), href: '/donate' },
       { name: t('nav.community'), href: '/community' },
+    ],
+    'International': [
+      { name: 'Global Board', href: '/intl/board' },
+      { name: 'Votes', href: '/intl/votes' },
+      { name: 'Chapters', href: '/intl/chapters' },
+      { name: 'Contact', href: '/intl/contact' },
     ],
   };
 

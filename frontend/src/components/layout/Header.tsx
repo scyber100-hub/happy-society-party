@@ -23,6 +23,7 @@ export function Header() {
         { name: '역사', href: '/about/history' },
         { name: '조직도', href: '/about/organization' },
         { name: '당헌당규', href: '/about/constitution' },
+        { name: '국제연대가', href: '/about/anthem' },
       ],
     },
     {
@@ -56,6 +57,16 @@ export function Header() {
         { name: t('nav.join'), href: '/join' },
         { name: t('nav.donate'), href: '/donate' },
         { name: t('nav.community'), href: '/community' },
+      ],
+    },
+    {
+      name: 'International',
+      href: '/intl/board',
+      children: [
+        { name: 'Global Board', href: '/intl/board' },
+        { name: 'Votes', href: '/intl/votes' },
+        { name: 'Chapters', href: '/intl/chapters' },
+        { name: 'Contact', href: '/intl/contact' },
       ],
     },
   ];
