@@ -64,7 +64,8 @@ export function useNominations(userId?: string) {
       setError(err instanceof Error ? err.message : '자격 확인 중 오류가 발생했습니다.');
       return null;
     }
-  }, [userId, supabase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   // 내 공천 신청 목록 조회
   const fetchMyNominations = useCallback(async () => {
@@ -85,7 +86,8 @@ export function useNominations(userId?: string) {
     } finally {
       setLoading(false);
     }
-  }, [userId, supabase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   // 공천 신청
   const applyNomination = useCallback(async (params: {
@@ -124,7 +126,8 @@ export function useNominations(userId?: string) {
         message: err instanceof Error ? err.message : '공천 신청 중 오류가 발생했습니다.',
       };
     }
-  }, [userId, supabase, fetchMyNominations]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId, fetchMyNominations]);
 
   // 공천 후보 목록 조회 (공개)
   const getCandidates = useCallback(async (params?: {
@@ -146,7 +149,8 @@ export function useNominations(userId?: string) {
       setError(err instanceof Error ? err.message : '후보 목록을 불러오는데 실패했습니다.');
       return [];
     }
-  }, [supabase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 공천 상세 조회
   const getNominationDetail = useCallback(async (nominationId: string) => {
@@ -167,7 +171,8 @@ export function useNominations(userId?: string) {
       setError(err instanceof Error ? err.message : '공천 정보를 불러오는데 실패했습니다.');
       return null;
     }
-  }, [supabase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 초기 데이터 로드
   useEffect(() => {

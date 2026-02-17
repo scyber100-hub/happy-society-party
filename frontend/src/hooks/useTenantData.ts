@@ -46,11 +46,13 @@ export function useTenantMembers() {
     } finally {
       setIsLoading(false);
     }
-  }, [tenant, supabase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tenant]);
 
   useEffect(() => {
     fetchMembers();
-  }, [fetchMembers]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tenant]);
 
   const addMember = async (userId: string, role: string = 'member') => {
     if (!tenant) return { success: false, error: 'No tenant selected' };
@@ -146,11 +148,13 @@ export function useTenantSettings() {
     } finally {
       setIsLoading(false);
     }
-  }, [tenant, supabase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tenant]);
 
   useEffect(() => {
     fetchSettings();
-  }, [fetchSettings]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tenant]);
 
   const updateSetting = async (key: string, value: unknown) => {
     if (!tenant) return { success: false, error: 'No tenant selected' };
@@ -244,7 +248,8 @@ export function useAllTenants() {
     };
 
     fetchTenants();
-  }, [supabase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return { tenants, isLoading, error };
 }

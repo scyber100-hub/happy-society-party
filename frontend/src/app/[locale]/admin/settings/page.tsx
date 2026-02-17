@@ -139,11 +139,13 @@ export default function AdminSettingsPage() {
     }
 
     setLoading(false);
-  }, [supabase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     fetchSettings();
-  }, [fetchSettings]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSave = async () => {
     setSaving(true);

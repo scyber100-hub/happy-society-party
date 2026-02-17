@@ -34,7 +34,8 @@ export function useAuth() {
       return null;
     }
     return data;
-  }, [supabase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const getSession = async () => {
@@ -82,7 +83,8 @@ export function useAuth() {
     );
 
     return () => subscription.unsubscribe();
-  }, [supabase, fetchProfile]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const signIn = async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signInWithPassword({

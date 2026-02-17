@@ -50,7 +50,8 @@ export default function JoinPage() {
     };
 
     fetchData();
-  }, [supabase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 시군구 데이터 가져오기
   const fetchDistricts = useCallback(async (regionId: string) => {
@@ -67,7 +68,8 @@ export default function JoinPage() {
       .order('name');
 
     if (data) setDistricts(data);
-  }, [supabase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 지역 변경 시 시군구 데이터 로드
   useEffect(() => {

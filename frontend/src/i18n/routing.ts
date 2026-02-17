@@ -6,6 +6,7 @@ export const routing = defineRouting({
   locales,
   defaultLocale,
   localePrefix: 'as-needed', // Only show locale prefix for non-default locales
+  localeDetection: false, // Disable browser language detection, always use Korean as default
 });
 
 // Lightweight wrappers around Next.js' navigation APIs

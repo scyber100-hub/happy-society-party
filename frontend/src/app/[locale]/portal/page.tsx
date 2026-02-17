@@ -208,7 +208,8 @@ export default function PortalPage() {
     }
 
     setLoading(false);
-  }, [user, profile, supabase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, profile]);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -219,7 +220,8 @@ export default function PortalPage() {
     if (user && profile) {
       fetchUserData();
     }
-  }, [authLoading, isAuthenticated, user, profile, router, fetchUserData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authLoading, isAuthenticated, user, profile, router]);
 
   const formatDate = (dateString: string) => {
     if (!dateString) return '';

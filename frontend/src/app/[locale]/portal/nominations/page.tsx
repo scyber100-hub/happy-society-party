@@ -74,7 +74,8 @@ export default function NominationsPage() {
       if (data) setRegions(data);
     };
     fetchRegions();
-  }, [supabase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

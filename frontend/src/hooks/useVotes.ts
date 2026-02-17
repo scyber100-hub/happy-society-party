@@ -49,7 +49,8 @@ export function useVotes(userId?: string) {
     } finally {
       setLoading(false);
     }
-  }, [userId, supabase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   // 특정 투표 상세 조회
   const fetchVoteDetail = useCallback(async (voteId: string) => {
@@ -66,7 +67,8 @@ export function useVotes(userId?: string) {
       setError(err instanceof Error ? err.message : '투표 정보를 불러오는데 실패했습니다.');
       return null;
     }
-  }, [supabase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 투표 자격 확인
   const checkEligibility = useCallback(async (voteId: string) => {
@@ -84,7 +86,8 @@ export function useVotes(userId?: string) {
     } catch {
       return false;
     }
-  }, [userId, supabase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   // 투표하기
   const castVote = useCallback(async (voteId: string, selectedOptions: string[]) => {
@@ -112,7 +115,8 @@ export function useVotes(userId?: string) {
         message: err instanceof Error ? err.message : '투표 처리 중 오류가 발생했습니다.',
       };
     }
-  }, [userId, supabase, fetchAvailableVotes]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId, fetchAvailableVotes]);
 
   // 투표 결과 조회
   const getVoteResult = useCallback(async (voteId: string) => {
@@ -135,7 +139,8 @@ export function useVotes(userId?: string) {
       setError(err instanceof Error ? err.message : '투표 결과를 불러오는데 실패했습니다.');
       return null;
     }
-  }, [supabase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 내 투표 기록 확인
   const getMyVoteRecord = useCallback(async (voteId: string) => {
@@ -154,7 +159,8 @@ export function useVotes(userId?: string) {
     } catch {
       return null;
     }
-  }, [userId, supabase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   // 초기 데이터 로드
   useEffect(() => {

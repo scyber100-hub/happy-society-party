@@ -87,7 +87,8 @@ export function TenantProvider({ children }: { children: ReactNode }) {
     };
 
     detectTenant();
-  }, [supabase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const setTenantBySlug = async (slug: string) => {
     try {
